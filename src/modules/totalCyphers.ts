@@ -1,3 +1,5 @@
+import { DECREASE_TEST_ASYNC_SUCCESS, decreaseTestAsync } from "./sagas";
+
 // 액션 타입 선언
 export const ADD_TEST = "totalCyphers/ADD_TEST" as const;
 
@@ -10,7 +12,9 @@ export const addTest = (test: number) => ({
 });
 
 // 액션 객체 타입
-type TotalCyphersAction = ReturnType<typeof addTest>;
+type TotalCyphersAction =
+  | ReturnType<typeof addTest>
+  | ReturnType<typeof decreaseTestAsync>;
 
 // 기본값 타입
 export type totalCypherState = {
@@ -28,11 +32,18 @@ export default function totalCyphersReducer(
   action: TotalCyphersAction
 ): totalCypherState {
   switch (action.type) {
-    case ADD_TEST:
+    case ADD_TEST: {
       return {
         ...state,
         test: state.test + action.payload.test,
       };
+    }
+    case DECREASE_TEST_ASYNC_SUCCESS: {
+      return {
+        ...state,
+        test: state.test - action.payload.test,
+      };
+    }
     default:
       return state;
   }
