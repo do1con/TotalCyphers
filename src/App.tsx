@@ -1,29 +1,22 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useEffect, useCallback } from "react";
+import { addTest, ADD_TEST } from "./modules/totalCyphers";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "./modules";
 
 function App(): JSX.Element {
+  const test = useSelector((state: RootState) => state.totalCyphers.test);
+  const dispatch = useDispatch();
+  const onClickBtn = useCallback(() => {
+    dispatch(addTest(3));
+  }, [dispatch, ADD_TEST]);
+  useEffect(() => {
+    console.log(addTest);
+    console.log(test);
+  });
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit<code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>
-          <a href="#">
-            gigigigigi <span>스팬스팬</span>
-          </a>
-        </p>
-      </header>
+      <p>스테이트 : {test}</p>
+      <button onClick={onClickBtn}>테스트 액션트리거</button>
     </div>
   );
 }
