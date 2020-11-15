@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./modules";
 import "antd/dist/antd.css";
 import Header from "./Layout/Header";
+import MainPageBody from "./Layout/MainPageBody";
 
 function App(): JSX.Element {
   const test = useSelector((state: RootState) => state.totalCyphers.test);
@@ -21,10 +22,11 @@ function App(): JSX.Element {
   }, [dispatch, decreaseTestAsync]);
   return (
     <div className="App">
+      <Header />
+      <MainPageBody />
       <p>스테이트 : {test}</p>
       <button onClick={onClickIncBtn}>테스트 액션트리거</button>
       <button onClick={onClickDecBtn}>테스트 사가액션 트리거</button>
-      <Header />
     </div>
   );
 }
