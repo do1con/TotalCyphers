@@ -1,4 +1,4 @@
-import { delay, put, takeLatest, takeEvery } from "redux-saga/effects";
+import { delay, put, takeLatest, takeEvery, call } from "redux-saga/effects";
 import axios, { AxiosResponse } from "axios";
 
 export const DECREASE_TEST_ASYNC = "totalCyphers/DECREASE_TEST_ASYNC" as const;
@@ -38,9 +38,7 @@ export const decreaseTestAsync = (data: number): TotalCyphersPayloadAction => ({
     test: data,
   },
 });
-export const searchUserSuccess = (
-  data: any
-): TotalCyphersSuccessSearchUser => ({
+export const searchUserSuccess = (data: any) => ({
   type: SEARCH_USER_NICKNAME_SUCCESS,
   payload: {
     playerId: data.rows[0].playerId,
@@ -48,8 +46,11 @@ export const searchUserSuccess = (
     grade: data.rows[0].grade,
   },
 });
-export const searchUserFailed = () => ({
+export const searchUserFailed = (err: any) => ({
   type: SEARCH_USER_NICKNAME_FAILURE,
+  payload: {
+    searchUserErrorReason: err,
+  },
 });
 
 // sagas
@@ -62,15 +63,39 @@ export function* searchUserNickname(data: any) {
   yield searchByNickname(data.payload.nickname);
 }
 
+function searchByNicknameAPI(payload: any) {
+  return axios.post("http://localhost:5000/proxy/totalcyphers/", payload);
+}
+
 function* searchByNickname(data: string) {
   try {
-    const result: AxiosResponse = yield axios.get(
-      `cy/players?nickname=굿치면뎐짐&wordType=full&apikey=비밀`
-    );
+    const payloadData = {
+      method: "post",
+      url: `http://localhost:5000/proxy/totalcyphers`,
+      data: {
+        reqMethod: "getUserByNickname",
+        payload: {
+          nickname: data,
+          wordType: "full",
+        },
+      },
+    };
+    const result = yield call(searchByNicknameAPI, payloadData);
+    debugger;
+    yield put({
+      type: SEARCH_USER_NICKNAME_SUCCESS,
+      payload: {
+        playerId: result.data.rows[0].playerId,
+        nickname: result.data.rows[0].nickname,
+        grade: result.data.rows[0].grade,
+      },
+    });
+    // const test: AxiosResponse = yield axios.post(
+    //   "http://localhost:5000/proxy/totalcyphers/test"
+    // );
     console.log(result);
-    yield put(searchUserSuccess(result));
   } catch (error) {
-    yield put(searchUserFailed());
+    yield put(searchUserFailed(error));
   }
 }
 
