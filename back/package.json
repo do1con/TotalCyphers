@@ -1,0 +1,11 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "total-cyphers proxy server",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Seongsoo Kim",
+  "license": "ISC"
+}
