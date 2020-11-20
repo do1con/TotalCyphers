@@ -1,4 +1,3 @@
-import { stringify } from "querystring";
 import {
   DECREASE_TEST_ASYNC_SUCCESS,
   SEARCH_USER_NICKNAME_REQUEST,
@@ -37,19 +36,17 @@ type TotalCyphersAction =
 // 기본값 타입
 export type totalCypherState = {
   test: number;
-  searchedNickname: string;
-  focusedUserId: string;
-  focusedUserNickname: string;
-  focusedUserGrade: number;
+  searchedPlayers: Array<any>;
+  searchUserErrorReason: string;
 };
+
+// type searchedPlayersArray = {};
 
 // 기본값
 export const initialState: totalCypherState = {
   test: 0,
-  searchedNickname: "",
-  focusedUserId: "",
-  focusedUserNickname: "",
-  focusedUserGrade: 0,
+  searchedPlayers: [],
+  searchUserErrorReason: "",
 };
 
 // 리듀서
@@ -73,19 +70,13 @@ export default function totalCyphersReducer(
     case SEARCH_USER_NICKNAME_SUCCESS: {
       return {
         ...state,
-        searchedNickname: action.payload.nickname,
-        focusedUserId: action.payload.playerId,
-        focusedUserNickname: action.payload.nickname,
-        focusedUserGrade: action.payload.grade,
+        searchedPlayers: action.payload.searchedPlayers,
       };
     }
     case SEARCH_USER_NICKNAME_FAILURE: {
       return {
         ...state,
-        searchedNickname: "",
-        focusedUserId: "",
-        focusedUserNickname: "",
-        focusedUserGrade: 0,
+        searchedPlayers: action.payload,
       };
     }
     default:

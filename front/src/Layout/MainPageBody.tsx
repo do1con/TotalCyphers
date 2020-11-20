@@ -1,19 +1,10 @@
-import React, { useEffect, useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Form, Input, Col, Row } from "antd";
-import { useDispatch } from "react-redux";
+import { Col, Row } from "antd";
 import gear from "../static/media/gear.png";
-import { searchUserByNickname } from "../modules/totalCyphers";
+import UserSearchBar from "../Components/UserSearchBar";
 
 function MainPageBody(): JSX.Element {
-  const { Search } = Input;
-  const dispatch = useDispatch();
-  const onSubmitSearchNickname = useCallback(
-    (e: string) => {
-      dispatch(searchUserByNickname(e));
-    },
-    [dispatch, searchUserByNickname]
-  );
   return (
     <BodyContainer>
       <BodyWrapper>
@@ -30,16 +21,7 @@ function MainPageBody(): JSX.Element {
         <div className="searchBar">
           <Col>
             <Row justify="center" align="middle">
-              <Form>
-                <Form.Item>
-                  <Search
-                    style={{ width: "300px", margin: "0 auto" }}
-                    placeholder="닉네임"
-                    enterButton
-                    onSearch={onSubmitSearchNickname}
-                  />
-                </Form.Item>
-              </Form>
+              <UserSearchBar />
             </Row>
           </Col>
         </div>

@@ -41,9 +41,7 @@ export const decreaseTestAsync = (data: number): TotalCyphersPayloadAction => ({
 export const searchUserSuccess = (data: any) => ({
   type: SEARCH_USER_NICKNAME_SUCCESS,
   payload: {
-    playerId: data.rows[0].playerId,
-    nickname: data.rows[0].nickname,
-    grade: data.rows[0].grade,
+    searchedPlayers: data.rows,
   },
 });
 export const searchUserFailed = (err: any) => ({
@@ -81,19 +79,12 @@ function* searchByNickname(data: string) {
       },
     };
     const result = yield call(searchByNicknameAPI, payloadData);
-    debugger;
     yield put({
       type: SEARCH_USER_NICKNAME_SUCCESS,
       payload: {
-        playerId: result.data.rows[0].playerId,
-        nickname: result.data.rows[0].nickname,
-        grade: result.data.rows[0].grade,
+        searchedPlayers: result.data.rows,
       },
     });
-    // const test: AxiosResponse = yield axios.post(
-    //   "http://localhost:5000/proxy/totalcyphers/test"
-    // );
-    console.log(result);
   } catch (error) {
     yield put(searchUserFailed(error));
   }
