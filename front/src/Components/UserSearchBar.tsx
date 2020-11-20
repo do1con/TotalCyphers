@@ -30,11 +30,20 @@ function UserSearchBar(): JSX.Element {
     },
     [dispatch, searchUserByNickname]
   );
-  const onChangeSearchBar = useCallback((e) => {
-    setTimeout(() => {
-      console.log("타이핑 멈춤");
-    }, 1500);
-  }, []);
+
+  // 디바운싱
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let lastTimeFunc: any;
+  const onChangeSearchBar = (e: any) => {
+    if (lastTimeFunc) {
+      clearTimeout(lastTimeFunc);
+      lastTimeFunc = null;
+    }
+    lastTimeFunc = setTimeout(() => {
+      dispatch(searchUserByNickname(e.target.value));
+      setFocusedBar(true);
+    }, 1000);
+  };
 
   return (
     <Form>
@@ -45,6 +54,7 @@ function UserSearchBar(): JSX.Element {
           enterButton
           onSearch={onSubmitSearchNickname}
           onFocus={(e) => {
+            console.log("e", e);
             if (e.target.value !== "") {
               setFocusedBar(true);
             }
