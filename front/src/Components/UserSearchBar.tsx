@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Form, Input } from "antd";
+import { Form, Input, Spin, Tag } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { searchUserByNickname } from "../modules/totalCyphers";
 import { RootState } from "../modules/index";
-import loading from "../static/media/loading.gif";
-
 type ListProps = {
-  showStatus: boolean;
+  showStatus?: boolean;
+  focusStatus?: boolean | number;
+  key?: number;
 };
 
 function UserSearchBar(): JSX.Element {
@@ -18,11 +18,7 @@ function UserSearchBar(): JSX.Element {
     (state: RootState) => state.totalCyphers.searchedPlayers
   );
   const [focusedBar, setFocusedBar] = useState(false);
-
-  useEffect(() => {
-    console.log("searchBar", searchedPlayers);
-    console.log("searchBar", focusedBar);
-  });
+  const [focusedUser, setFocusedUser] = useState(1);
 
   const onSubmitSearchNickname = useCallback(
     (e: string) => {
@@ -64,9 +60,29 @@ function UserSearchBar(): JSX.Element {
         />
         <SearchedList showStatus={focusedBar}>
           {searchedPlayers.length > 0 ? (
-            "Searching..."
+            searchedPlayers.map((data, index) => {
+              if (index < 6) {
+                return (
+                  <PlayerListCard
+                    key={index}
+                    focusStatus={focusedUser === index}
+                  >
+                    <span>{data.nickname}</span>
+                    <span style={{ float: "right", color: "#9f9f9f" }}>
+                      {data.grade} 급
+                    </span>
+                  </PlayerListCard>
+                );
+              }
+            })
           ) : (
-            <img src={loading} alt="검색중..." width="100" />
+            <Spin
+              style={{
+                display: "block",
+                margin: "0 auto",
+                padding: "20px 0px",
+              }}
+            />
           )}
         </SearchedList>
       </Form.Item>
@@ -79,6 +95,15 @@ export default UserSearchBar;
 const SearchedList = styled.div<ListProps>`
   display: ${(props: any) => (props.showStatus ? "block" : "none")};
   width: 100%;
-  height: 100%;
-  background-color: coral;
+  box-shadow: 0 2px 8px #cfcfcf;
+  cursor: pointer;
+`;
+
+const PlayerListCard = styled.div<ListProps>`
+  width: 100%;
+  padding: 5px 15px;
+  font-size: 12px;
+  &:hover {
+    box-shadow: 0 0px 8px #afafaf;
+  }
 `;

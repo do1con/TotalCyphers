@@ -19,7 +19,7 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
       rp(
         `https://api.neople.co.kr/cy/players?nickname=${encodeURI(
           requestContext.payload.nickname
-        )}&wordType=full&apikey=${API_KEY}`
+        )}&wordType=full&limit=5&apikey=${API_KEY}`
       )
         .then((data) => {
           res.status(200).send(data);
@@ -42,7 +42,7 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
   console.log(
     `https://api.neople.co.kr/cy/players?nickname=${String(
       requestContext.payload.nickname
-    )}&wordType=full&apikey=KpskMeFrE0rtEvRvQxJuK0Fw9t1c5v5b`
+    )}&wordType=full&limit=6&apikey=KpskMeFrE0rtEvRvQxJuK0Fw9t1c5v5b`
   );
 });
 
