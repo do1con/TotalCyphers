@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, Input, Spin, Tag } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { searchUserByNickname } from "../modules/totalCyphers";
 import { RootState } from "../modules/index";
 type ListProps = {
@@ -11,13 +12,16 @@ type ListProps = {
 };
 
 function UserSearchBar(): JSX.Element {
+  React.useEffect(() => {
+    console.log("서플", searchedPlayers);
+    console.log("서플랭스", searchedPlayers.length);
+  });
   const { Search } = Input;
   const dispatch = useDispatch();
 
   const searchedPlayers = useSelector(
     (state: RootState) => state.totalCyphers.searchedPlayers
   );
-  const [focusedBar, setFocusedBar] = useState(false);
   const [focusedUser, setFocusedUser] = useState(1);
 
   const onSubmitSearchNickname = useCallback(
@@ -37,8 +41,10 @@ function UserSearchBar(): JSX.Element {
     }
     lastTimeFunc = setTimeout(() => {
       dispatch(searchUserByNickname(e.target.value));
-      setFocusedBar(true);
-    }, 1000);
+    }, 300);
+  };
+  const onClickUser = () => {
+    console.log("클릭드");
   };
 
   return (
@@ -49,41 +55,28 @@ function UserSearchBar(): JSX.Element {
           placeholder="닉네임"
           enterButton
           onSearch={onSubmitSearchNickname}
-          onFocus={(e) => {
-            console.log("e", e);
-            if (e.target.value !== "") {
-              setFocusedBar(true);
-            }
-          }}
-          onBlur={() => setFocusedBar(false)}
           onChange={onChangeSearchBar}
         />
-        <SearchedList showStatus={focusedBar}>
-          {searchedPlayers.length > 0 ? (
+        <SearchedList>
+          {searchedPlayers.length > 0 &&
             searchedPlayers.map((data, index) => {
               if (index < 6) {
                 return (
-                  <PlayerListCard
+                  <Link
+                    to={`/userInfo/${data.playerId}`}
                     key={index}
-                    focusStatus={focusedUser === index}
+                    onClick={onClickUser}
                   >
-                    <span>{data.nickname}</span>
-                    <span style={{ float: "right", color: "#9f9f9f" }}>
-                      {data.grade} 급
-                    </span>
-                  </PlayerListCard>
+                    <PlayerListCard focusStatus={focusedUser === index}>
+                      <span>{data.nickname}</span>
+                      <span style={{ float: "right", color: "#9f9f9f" }}>
+                        {data.grade} 급
+                      </span>
+                    </PlayerListCard>
+                  </Link>
                 );
               }
-            })
-          ) : (
-            <Spin
-              style={{
-                display: "block",
-                margin: "0 auto",
-                padding: "20px 0px",
-              }}
-            />
-          )}
+            })}
         </SearchedList>
       </Form.Item>
     </Form>
@@ -92,11 +85,11 @@ function UserSearchBar(): JSX.Element {
 
 export default UserSearchBar;
 
-const SearchedList = styled.div<ListProps>`
-  display: ${(props: any) => (props.showStatus ? "block" : "none")};
+const SearchedList = styled.div`
+  display: block;
   width: 100%;
+  overflow: hidden;
   box-shadow: 0 2px 8px #cfcfcf;
-  cursor: pointer;
 `;
 
 const PlayerListCard = styled.div<ListProps>`
