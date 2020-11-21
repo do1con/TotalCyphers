@@ -12,7 +12,7 @@ function App(): JSX.Element {
       <BrowserRouter>
         <Header />
         <Route path="/" component={MainPageBody} exact />
-        <Route path="/userInfo" component={UserInfo} />
+        <Route path="/userInfo/:userId" component={UserInfo} />
         <Footer />
       </BrowserRouter>
     </div>

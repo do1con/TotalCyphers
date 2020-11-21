@@ -1,21 +1,24 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import total_cyphers_logo from "../static/media/total_cyphers_logo.png";
 
 function Header(): JSX.Element {
   return (
-    <HeaderContainer>
-      <img
-        src={total_cyphers_logo}
-        alt="토탈 사이퍼즈"
-        width="30"
-        height="30"
-        style={{
-          marginLeft: "15px",
-        }}
-      />
-      <Title>Total Cyphers</Title>
-    </HeaderContainer>
+    <Link to="/">
+      <HeaderContainer>
+        <img
+          src={total_cyphers_logo}
+          alt="토탈 사이퍼즈"
+          width="30"
+          height="30"
+          style={{
+            marginLeft: "15px",
+          }}
+        />
+        <Title>Total Cyphers</Title>
+      </HeaderContainer>
+    </Link>
   );
 }
 
