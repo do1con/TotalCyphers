@@ -45,6 +45,24 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         });
       break;
     }
+    case "getUserPlayList": {
+      console.log("유저 전적 검색");
+      rp(
+        `https://api.neople.co.kr/cy/players/${encodeURI(
+          requestContext.payload.userId
+        )}/matches?gameTypeId=${
+          requestContext.payload.playType
+        }&limit=100&apikey=${API_KEY}`
+      )
+        .then((data) => {
+          res.status(200).send(data);
+        })
+        .catch((err) => {
+          console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
+          res.status(500).send(err);
+        });
+      break;
+    }
     default: {
       console.log("잘못된 요청이 들어왔습니다.");
       console.log("요청 : ", requestMethod);
@@ -57,7 +75,9 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
   console.log(
     `https://api.neople.co.kr/cy/players/${encodeURI(
       requestContext.payload.userId
-    )}&apikey=${API_KEY}`
+    )}/matches?gameTypeId=${
+      requestContext.payload.playType
+    }&startDate=<startDate>&endDate=<endDate>&limit=<limit>&next=<next>&?apikey=${API_KEY}`
   );
 });
 

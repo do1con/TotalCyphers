@@ -7,6 +7,9 @@ export const SEARCH_USER_NICKNAME_FAILURE = "totalCyphers/SEARCH_USER_NICKNAME_F
 export const GET_USER_INFO_REQUEST = "totalCyphers/GET_USER_INFO_REQUEST" as const;
 export const GET_USER_INFO_SUCCESS = "totalCyphers/GET_USER_INFO_SUCCESS" as const;
 export const GET_USER_INFO_FAILURE = "totalCyphers/GET_USER_INFO_FAILURE" as const;
+export const GET_USER_PLAYLIST_REQUEST = "totalCyphers/GET_USER_PLAYLIST_REQUEST" as const;
+export const GET_USER_PLAYLIST_SUCCESS = "totalCyphers/GET_USER_PLAYLIST_SUCCESS" as const;
+export const GET_USER_PLAYLIST_FAILURE = "totalCyphers/GET_USER_PLAYLIST_FAILURE" as const;
 
 // 액션 객체 타입
 interface TotalCyphersNoPayloadAction {
@@ -49,7 +52,6 @@ export const getUserInfoFailed = (err: any) => ({
 });
 
 // sagas
-
 // 특정 유저 정보 요청
 export function* getUserInfo(data: any) {
   yield getUserById(data.payload.userId);
@@ -108,6 +110,40 @@ function* searchByNickname(data: string) {
   }
 }
 
+// 유저 전적 검색
+function* getPlayList(data: any) {
+  yield getPlayListByUserId(data.payload.userId, data.payload.playType);
+}
+function* getPlayListByUserId(userId: string, playType: string) {
+  try {
+    const payloadData = {
+      method: "post",
+      url: `http://localhost:5000/proxy/totalcyphers`,
+      data: {
+        reqMethod: "getUserPlayList",
+        payload: {
+          userId,
+          playType,
+        },
+      },
+    };
+    const result = yield call(callAPI, payloadData);
+    yield put({
+      type: GET_USER_PLAYLIST_SUCCESS,
+      payload: {
+        playedRecords: result.data.matches.rows,
+      },
+    });
+  } catch (error) {
+    yield put({
+      type: GET_USER_PLAYLIST_FAILURE,
+      payload: {
+        getUserPlaylistFailReason: error,
+      },
+    });
+  }
+}
+
 // API 요청 통일 됨
 function callAPI(payload: any) {
   return axios.post("http://localhost:5000/proxy/totalcyphers/", payload);
@@ -116,4 +152,5 @@ function callAPI(payload: any) {
 export default function* totalCyphersSaga() {
   yield takeLatest(SEARCH_USER_NICKNAME_REQUEST, searchUserNickname);
   yield takeLatest(GET_USER_INFO_REQUEST, getUserInfo);
+  yield takeLatest(GET_USER_PLAYLIST_REQUEST, getPlayList);
 }

@@ -5,6 +5,9 @@ import {
   GET_USER_INFO_REQUEST,
   GET_USER_INFO_SUCCESS,
   GET_USER_INFO_FAILURE,
+  GET_USER_PLAYLIST_REQUEST,
+  GET_USER_PLAYLIST_SUCCESS,
+  GET_USER_PLAYLIST_FAILURE,
   searchUserSuccess,
   searchUserFailed,
 } from "./sagas";
@@ -25,6 +28,13 @@ export const getUserByUserId = (userId: string) => ({
     userId,
   },
 });
+export const getUserPlayList = (userId: string, playType: string) => ({
+  type: GET_USER_PLAYLIST_REQUEST,
+  payload: {
+    userId,
+    playType,
+  },
+});
 
 export const resetSearchUserList = {
   type: RESET_SEARCHED_USER_LIST,
@@ -40,6 +50,8 @@ export type totalCypherState = {
   searchedPlayers: Array<any>;
   searchUserErrorReason: string;
   focusedUser: any;
+  playedRecords: Array<any>;
+  getUserPlaylistFailReason: string;
 };
 
 // type searchedPlayersArray = {};
@@ -49,6 +61,8 @@ export const initialState: totalCypherState = {
   searchedPlayers: [],
   searchUserErrorReason: "",
   focusedUser: "",
+  playedRecords: [],
+  getUserPlaylistFailReason: "",
 };
 
 // 리듀서
@@ -79,6 +93,18 @@ export default function totalCyphersReducer(
       return {
         ...state,
         searchedPlayers: [],
+      };
+    }
+    case GET_USER_PLAYLIST_SUCCESS: {
+      return {
+        ...state,
+        playedRecords: action.payload.playedRecords,
+      };
+    }
+    case GET_USER_PLAYLIST_FAILURE: {
+      return {
+        ...state,
+        getUserPlaylistFailReason: action.payload.getUserPlaylistFailReason,
       };
     }
     default:
