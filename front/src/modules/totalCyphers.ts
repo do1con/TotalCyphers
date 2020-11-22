@@ -72,7 +72,7 @@ export default function totalCyphersReducer(
     case GET_USER_INFO_SUCCESS: {
       return {
         ...state,
-        focusedUser: action.payload,
+        focusedUser: action.payload.focusedUser,
       };
     }
     case RESET_SEARCHED_USER_LIST: {
