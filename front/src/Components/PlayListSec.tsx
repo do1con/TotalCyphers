@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules/index";
 import { getUserPlayList } from "../modules/totalCyphers";
+import PlayedInfoSec from "./PlayedInfoSec";
 
 function PlayListSec(parameter: any): JSX.Element {
   const { TabPane } = Tabs;
@@ -28,16 +29,7 @@ function PlayListSec(parameter: any): JSX.Element {
         </Tabs>
         {playedList.map((data, index) => {
           console.log(data);
-          return (
-            <div key={index}>
-              <span>날짜 : {data.date}</span>
-              <span>결과 : {data.playInfo.result}</span>
-              <span>
-                K/D/A : {data.playInfo.killCount}/{data.playInfo.deathCount}/
-                {data.playInfo.assistCount}
-              </span>
-            </div>
-          );
+          return <PlayedInfoSec data={data} key={index} />;
         })}
       </Card>
     );
