@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
@@ -15,6 +15,7 @@ function PlayedInfoSec(data: any): JSX.Element {
   const info = data.data;
   useEffect(() => {
     console.log(info);
+    getDateDiffer();
   });
   const kda = () => {
     const value =
@@ -29,8 +30,49 @@ function PlayedInfoSec(data: any): JSX.Element {
     }
     return value.toFixed(2);
   };
+  const getDateDiffer = useCallback(() => {
+    const strArr = info.date.split("-");
+    const dateArr = strArr[2].split(" ");
+    const timeArr = dateArr[1].split(":");
+    const matchYear = Number(strArr[0]);
+    const matchMonth = Number(strArr[1]);
+    const matchDate = Number(dateArr[0]);
+    const matchHours = Number(timeArr[0]);
+    const matchMinute = Number(timeArr[1]);
+    const today = new Date();
+    const todayYear: number = today.getFullYear();
+    const todayMonth: number = today.getMonth() + 1;
+    const todayDate: number = today.getDate();
+    const todayHours: number = today.getHours();
+    const todayMinute: number = today.getMinutes();
+    if (todayYear > matchYear) {
+      return `${todayYear - matchYear}년 전`;
+    }
+    if (todayMonth > matchMonth) {
+      return `${todayMonth - matchMonth}개월 전`;
+    }
+    if (todayDate > matchDate) {
+      return `${todayDate - matchDate}일 전`;
+    }
+    if (todayHours > matchHours) {
+      return `${todayHours - matchHours}시간 전`;
+    }
+    if (todayMinute > matchMinute) {
+      return `${todayMinute - matchMinute}분 전`;
+    }
+  }, [info.date]);
   return (
     <PlayedInfoWrapper win={info.playInfo.result === "win"}>
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          width: "65px",
+          textAlign: "center",
+        }}
+      >
+        <span>&nbsp;{getDateDiffer()}</span>
+      </div>
       <div
         style={{
           height: "101px",
@@ -120,7 +162,10 @@ function PlayedInfoSec(data: any): JSX.Element {
         </div>
         <div style={{ textAlign: "center" }}>{kda()} 평점</div>
       </div>
-      <div style={{ margin: "10px", position: "relative", zIndex: 2 }}>
+      <div style={{ width: "80px", position: "relative", zIndex: 2 }}>
+        여기에 정보 ㅇ
+      </div>
+      <div style={{ margin: "10px", position: "relative", zIndex: 3 }}>
         {info.position.attribute.map((data: any, index: number) => (
           <div
             style={{
@@ -144,7 +189,14 @@ function PlayedInfoSec(data: any): JSX.Element {
           </div>
         ))}
       </div>
-      <div style={{ position: "relative", zIndex: 2, marginLeft: "auto" }}>
+      <div
+        style={{
+          position: "absolute",
+          zIndex: 2,
+          marginLeft: "auto",
+          right: "0",
+        }}
+      >
         <img
           src={
             info.map.mapId === "101"
