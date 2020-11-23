@@ -4,6 +4,12 @@ import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
 import one_dealer from "./../static/media/one_dealer.png";
+import map_riverford from "./../static/media/map_riverford.png";
+import map_bristol from "./../static/media/map_bristol.png";
+import map_eindhoven from "./../static/media/map_eindhoven.png";
+import map_grandflam from "./../static/media/map_grandflam.png";
+import map_metropolis from "./../static/media/map_metropolis.png";
+import map_springfield from "./../static/media/map_springfield.png";
 
 function PlayedInfoSec(data: any): JSX.Element {
   const info = data.data;
@@ -62,7 +68,7 @@ function PlayedInfoSec(data: any): JSX.Element {
           />
         </div>
         <div style={{ width: "100%", textAlign: "center" }}>
-          <span style={{ fontSize: "14px" }}>
+          <span style={{ fontSize: "14px", fontWeight: "bold" }}>
             {info.playInfo.characterName}
           </span>
         </div>
@@ -85,7 +91,7 @@ function PlayedInfoSec(data: any): JSX.Element {
               ? geun_dealer
               : info.position.name === "서포터"
               ? suppoter
-              : ""
+              : "에러"
           }
           alt="포지션"
           width="25"
@@ -120,18 +126,81 @@ function PlayedInfoSec(data: any): JSX.Element {
             style={{
               display: "flex",
               flexDirection: "column",
-              borderRadius: "25% 25%",
               overflow: "hidden",
             }}
             key={index}
           >
-            <img
-              src={`https://img-api.neople.co.kr/cy/position-attributes/${data.id}`}
-              alt="특성"
-              width="27"
-            />
+            <div>
+              <img
+                src={`https://img-api.neople.co.kr/cy/position-attributes/${data.id}`}
+                alt="특성"
+                width="27"
+                style={{
+                  borderRadius: "25% 25%",
+                }}
+              />
+              <span style={{ fontSize: "12px" }}>&nbsp;{data.name}</span>
+            </div>
           </div>
         ))}
+      </div>
+      <div style={{ position: "relative", zIndex: 2, marginLeft: "auto" }}>
+        <img
+          src={
+            info.map.mapId === "101"
+              ? map_riverford
+              : info.map.mapId === "102"
+              ? map_metropolis
+              : info.map.mapId === "103"
+              ? map_bristol
+              : info.map.mapId === "104"
+              ? map_springfield
+              : info.map.mapId === "105"
+              ? map_grandflam
+              : info.map.mapId === "106"
+              ? map_eindhoven
+              : ".."
+          }
+          alt="맵"
+          height="101"
+        />
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "0",
+            left: "0",
+            background: `linear-gradient(60deg, ${
+              info.playInfo.result === "win"
+                ? "rgba(186, 231, 255, 1)"
+                : "rgba(255, 204, 199, 1)"
+            }30%, rgba(255,255,255,0))`,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50px",
+              right: "0",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              width: "100px",
+              height: "30px",
+              textAlign: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "13px",
+                fontWeight: "bold",
+                color: "#ffffff",
+                lineHeight: "30px",
+              }}
+            >
+              {info.map.name}
+            </span>
+          </div>
+        </div>
       </div>
     </PlayedInfoWrapper>
   );
