@@ -27,9 +27,14 @@ function PlayListSec(parameter: any): JSX.Element {
   useEffect(() => {
     dispatch(getUserPlayList(userId, playListType, before30daysAgo, today));
   }, [playListType]);
-  const onChangeTab = useCallback((key) => {
-    setPlayListType(key);
-  }, []);
+  const onChangeTab = useCallback(
+    (key) => {
+      setPlayListType(key);
+      setShowLimit(10);
+      setIsLastRecord(false);
+    },
+    [setPlayListType, setShowLimit, setIsLastRecord]
+  );
   const onClickShowMore = useCallback(() => {
     setShowLimit(showLimit + 10);
     if (playedList.length - 1 < showLimit + 10) {

@@ -1,7 +1,11 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { Popover } from "antd";
-import { DownOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  UpOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
@@ -12,13 +16,11 @@ import map_eindhoven from "./../static/media/map_eindhoven.png";
 import map_grandflam from "./../static/media/map_grandflam.png";
 import map_metropolis from "./../static/media/map_metropolis.png";
 import map_springfield from "./../static/media/map_springfield.png";
+import PlayedInfoDefail from "./PlayedInfoDetail";
 
 function PlayedInfoSec(data: any): JSX.Element {
   const info = data.data;
-  useEffect(() => {
-    // console.log(info);
-    getDateDiffer();
-  });
+  const [showDetail, setShowDetail] = useState(false);
   const kda = () => {
     const value =
       (info.playInfo.killCount + info.playInfo.assistCount) /
@@ -32,6 +34,9 @@ function PlayedInfoSec(data: any): JSX.Element {
     }
     return value.toFixed(2);
   };
+  useEffect(() => {
+    console.log(info);
+  });
   const getDateDiffer = useCallback(() => {
     const strArr = info.date.split("-");
     const dateArr = strArr[2].split(" ");
@@ -64,7 +69,7 @@ function PlayedInfoSec(data: any): JSX.Element {
     }
   }, [info.date]);
   return (
-    <div style={{ height: "121px", marginBottom: "10px" }}>
+    <div style={{ marginBottom: "10px" }}>
       <PlayedInfoWrapper win={info.playInfo.result === "win"}>
         <div
           style={{
@@ -287,9 +292,17 @@ function PlayedInfoSec(data: any): JSX.Element {
           </div>
         </div>
       </PlayedInfoWrapper>
-      <PlayedInfoDetailBtn win={info.playInfo.result === "win"}>
-        <DownOutlined style={{ margin: "0 auto" }} />
+      <PlayedInfoDetailBtn
+        win={info.playInfo.result === "win"}
+        onClick={() => setShowDetail(!showDetail)}
+      >
+        {showDetail ? (
+          <UpOutlined style={{ margin: "0 auto" }} />
+        ) : (
+          <DownOutlined style={{ margin: "0 auto" }} />
+        )}
       </PlayedInfoDetailBtn>
+      {showDetail && <PlayedInfoDefail matchId={info.matchId} />}
     </div>
   );
 }
@@ -302,11 +315,10 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   display: flex;
   align-items: center;
   position: relative;
-  height: 101px;
 `;
 const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
   width: 100%;
-  height: 20px;
+  height: 22px;
   background-color ${(props) => (props.win ? "#91d5ff" : "#ffa39e")};
   text-align: center;
   cursor: pointer

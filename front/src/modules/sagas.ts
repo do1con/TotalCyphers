@@ -10,6 +10,9 @@ export const GET_USER_INFO_FAILURE = "totalCyphers/GET_USER_INFO_FAILURE" as con
 export const GET_USER_PLAYLIST_REQUEST = "totalCyphers/GET_USER_PLAYLIST_REQUEST" as const;
 export const GET_USER_PLAYLIST_SUCCESS = "totalCyphers/GET_USER_PLAYLIST_SUCCESS" as const;
 export const GET_USER_PLAYLIST_FAILURE = "totalCyphers/GET_USER_PLAYLIST_FAILURE" as const;
+export const GET_GAME_DETAIL_REQUEST = "totalCyphers/GET_GAME_DETAIL_REQUEST" as const;
+export const GET_GAME_DETAIL_SUCCESS = "totalCyphers/GET_GAME_DETAIL_SUCCESS" as const;
+export const GET_GAME_DETAIL_FAILURE = "totalCyphers/GET_GAME_DETAIL_FAILURE" as const;
 
 // 액션 객체 타입
 interface TotalCyphersNoPayloadAction {
@@ -155,6 +158,40 @@ function* getPlayListByUserId(
     });
   }
 }
+// 게임전적 디테일
+function* getGameDetail(data: any) {
+  yield getGameDetailByMatchId(data.payload.matchId);
+}
+function* getGameDetailByMatchId(matchId: string) {
+  try {
+    const payloadData = {
+      method: "post",
+      url: `http://localhost:5000/proxy/totalcyphers`,
+      data: {
+        reqMethod: "getGameDetail",
+        payload: {
+          matchId,
+        },
+      },
+    };
+    const result = yield call(callAPI, payloadData);
+    yield put({
+      type: GET_GAME_DETAIL_SUCCESS,
+      payload: {
+        matchId,
+        playedRecords: result.data,
+      },
+    });
+  } catch (error) {
+    yield put({
+      type: GET_GAME_DETAIL_FAILURE,
+      payload: {
+        matchId,
+        getGameDetailFailReason: error,
+      },
+    });
+  }
+}
 
 // API 요청 통일 됨
 function callAPI(payload: any) {
@@ -165,4 +202,5 @@ export default function* totalCyphersSaga() {
   yield takeLatest(SEARCH_USER_NICKNAME_REQUEST, searchUserNickname);
   yield takeLatest(GET_USER_INFO_REQUEST, getUserInfo);
   yield takeLatest(GET_USER_PLAYLIST_REQUEST, getPlayList);
+  yield takeLatest(GET_GAME_DETAIL_REQUEST, getGameDetail);
 }

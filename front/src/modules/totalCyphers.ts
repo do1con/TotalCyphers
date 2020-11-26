@@ -8,6 +8,9 @@ import {
   GET_USER_PLAYLIST_REQUEST,
   GET_USER_PLAYLIST_SUCCESS,
   GET_USER_PLAYLIST_FAILURE,
+  GET_GAME_DETAIL_REQUEST,
+  GET_GAME_DETAIL_SUCCESS,
+  GET_GAME_DETAIL_FAILURE,
   searchUserSuccess,
   searchUserFailed,
 } from "./sagas";
@@ -43,6 +46,12 @@ export const getUserPlayList = (
     searchEndRange,
   },
 });
+export const getGameDetail = (matchId: string) => ({
+  type: GET_GAME_DETAIL_REQUEST,
+  payload: {
+    matchId,
+  },
+});
 
 export const resetSearchUserList = {
   type: RESET_SEARCHED_USER_LIST,
@@ -67,6 +76,7 @@ export type totalCypherState = {
   focusedUser: any;
   playedRecords: Array<any>;
   getUserPlaylistFailReason: string;
+  getUserInfoFailReason: string;
   currentUrl: string;
 };
 
@@ -79,6 +89,7 @@ export const initialState: totalCypherState = {
   focusedUser: "",
   playedRecords: [],
   getUserPlaylistFailReason: "",
+  getUserInfoFailReason: "",
   currentUrl: "",
 };
 
@@ -112,6 +123,12 @@ export default function totalCyphersReducer(
         focusedUser: action.payload.focusedUser,
       };
     }
+    case GET_USER_INFO_FAILURE: {
+      return {
+        ...state,
+        getUserInfoFailReason: action.payload.getUserInfoErrorReason,
+      };
+    }
     case RESET_SEARCHED_USER_LIST: {
       return {
         ...state,
@@ -128,6 +145,16 @@ export default function totalCyphersReducer(
       return {
         ...state,
         getUserPlaylistFailReason: action.payload.getUserPlaylistFailReason,
+      };
+    }
+    case GET_GAME_DETAIL_SUCCESS: {
+      return {
+        ...state,
+        playedRecords: state.playedRecords.map((data, index) =>
+          data.matchId === action.payload.matchId
+            ? { ...data, matchDetail: action.payload.playedRecords }
+            : data
+        ),
       };
     }
     default:

@@ -64,6 +64,20 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         });
       break;
     }
+    case "getGameDetail": {
+      console.log("게임 전적 디테일");
+      rp(
+        `https://api.neople.co.kr/cy/matches/${requestContext.payload.matchId}?apikey=${API_KEY}`
+      )
+        .then((data) => {
+          res.status(200).send(data);
+        })
+        .catch((err) => {
+          console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
+          res.status(500).send(err);
+        });
+      break;
+    }
     default: {
       console.log("잘못된 요청이 들어왔습니다.");
       console.log("요청 : ", requestMethod);
@@ -74,12 +88,7 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
 
   console.log("reqested", requestContext);
   console.log(
-    `https://api.neople.co.kr/cy/players/${encodeURI(
-      requestContext.payload.userId
-    )}/matches?gameTypeId=${requestContext.payload.playType}&startDate=${
-      requestContext.payload.searchStartRange
-    }&endDate=${requestContext.payload.searchEndRange}
-        &limit=100&apikey=${API_KEY}`
+    `https://api.neople.co.kr/cy/matches/${requestContext.payload.matchId}?apikey=${API_KEY}`
   );
 });
 
