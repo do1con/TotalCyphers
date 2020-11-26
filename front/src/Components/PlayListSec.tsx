@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Tabs, Button } from "antd";
+import { Card, Tabs, Button, Popover } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
@@ -39,7 +40,16 @@ function PlayListSec(parameter: any): JSX.Element {
     return (
       <Card
         style={{ width: "70%" }}
-        title={<span className="ㅇㅇ">최근 경기</span>}
+        title={
+          <span className="ㅇㅇ">
+            최근 경기{" "}
+            <Popover
+              content={"오늘부터 90일 전까지 최대 100개의 전적이 조회됩니다."}
+            >
+              <InfoCircleOutlined />
+            </Popover>
+          </span>
+        }
       >
         <Tabs defaultActiveKey="normal" onChange={onChangeTab}>
           <TabPane tab="일반전" key="normal"></TabPane>

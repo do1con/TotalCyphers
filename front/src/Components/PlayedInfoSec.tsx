@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { DownOutlined } from "@ant-design/icons";
+import { Popover } from "antd";
+import { DownOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
@@ -69,11 +70,15 @@ function PlayedInfoSec(data: any): JSX.Element {
           style={{
             position: "relative",
             zIndex: 2,
-            width: "65px",
+            width: "75px",
             textAlign: "center",
+            fontSize: "12px",
           }}
         >
-          <span>&nbsp;{getDateDiffer()}</span>
+          <Popover content={info.date}>
+            <InfoCircleOutlined />
+            <span>&nbsp;{getDateDiffer()}</span>
+          </Popover>
         </div>
         <div
           style={{
