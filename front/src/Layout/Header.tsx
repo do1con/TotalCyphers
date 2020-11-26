@@ -2,23 +2,48 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import total_cyphers_logo from "../static/media/total_cyphers_logo.png";
+import UserSearchBar from "../Components/UserSearchBar";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../modules/index";
 
 function Header(): JSX.Element {
+  const currentUrl = useSelector(
+    (state: RootState) => state.totalCyphers.currentUrl
+  );
   return (
-    <Link to="/">
-      <HeaderContainer>
-        <img
-          src={total_cyphers_logo}
-          alt="토탈 사이퍼즈"
-          width="30"
-          height="30"
+    <HeaderContainer>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <Link to="/">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={total_cyphers_logo}
+              alt="토탈 사이퍼즈"
+              width="30"
+              height="30"
+              style={{
+                marginLeft: "15px",
+              }}
+            />
+            <Title>Total Cyphers</Title>
+          </div>
+        </Link>
+        <div
           style={{
-            marginLeft: "15px",
+            marginLeft: "auto",
+            width: "300px",
+            height: "32px",
           }}
-        />
-        <Title>Total Cyphers</Title>
-      </HeaderContainer>
-    </Link>
+        >
+          <UserSearchBar />
+        </div>
+      </div>
+    </HeaderContainer>
   );
 }
 
@@ -28,6 +53,8 @@ const HeaderContainer = styled.header`
   box-shadow: 0 2px 8px #f0f1f2;
   display: flex;
   align-items: center;
+  padding-left: 30px;
+  padding-right: 30px;
 `;
 
 const Title = styled.h1`

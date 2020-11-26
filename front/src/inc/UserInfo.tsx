@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import UserInfoSec from "../Components/UserInfoSec";
 import PlayListSec from "../Components/PlayListSec";
+import { useDispatch } from "react-redux";
+import { setCurrentUrl } from "../modules/totalCyphers";
 
 function UserInfo({ match }: any): JSX.Element {
   const parameter = match.params.userId;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setCurrentUrl(window.location.href));
+  }, []);
   return (
     <BodyWrapper>
       <UserInfoSec parameter={parameter} />

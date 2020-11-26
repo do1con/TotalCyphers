@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Col, Row } from "antd";
 import gear from "../static/media/gear.png";
 import UserSearchBar from "../Components/UserSearchBar";
+import { useDispatch } from "react-redux";
+import { setCurrentUrl } from "../modules/totalCyphers";
 
 function MainPageBody(): JSX.Element {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setCurrentUrl(window.location.href));
+  }, []);
   return (
     <BodyContainer>
       <BodyWrapper>

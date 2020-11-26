@@ -14,6 +14,7 @@ import {
 
 // 액션 타입 선언
 const RESET_SEARCHED_USER_LIST = "totalCyphers/RESET_SEARCHED_USER_LIST" as const;
+const SET_CURRENT_URL = "totalCyphers/SET_CURRENT_URL" as const;
 
 // 액션 생성함수 선언
 export const searchUserByNickname = (nickname: string) => ({
@@ -40,6 +41,13 @@ export const resetSearchUserList = {
   type: RESET_SEARCHED_USER_LIST,
 };
 
+export const setCurrentUrl = (currentUrl: string) => ({
+  type: SET_CURRENT_URL,
+  payload: {
+    url: currentUrl,
+  },
+});
+
 // 액션 객체 타입
 type TotalCyphersAction =
   | ReturnType<typeof searchUserSuccess>
@@ -52,6 +60,7 @@ export type totalCypherState = {
   focusedUser: any;
   playedRecords: Array<any>;
   getUserPlaylistFailReason: string;
+  currentUrl: string;
 };
 
 // type searchedPlayersArray = {};
@@ -63,6 +72,7 @@ export const initialState: totalCypherState = {
   focusedUser: "",
   playedRecords: [],
   getUserPlaylistFailReason: "",
+  currentUrl: "",
 };
 
 // 리듀서
@@ -71,6 +81,12 @@ export default function totalCyphersReducer(
   action: any
 ): totalCypherState {
   switch (action.type) {
+    case SET_CURRENT_URL: {
+      return {
+        ...state,
+        currentUrl: action.payload.url,
+      };
+    }
     case SEARCH_USER_NICKNAME_SUCCESS: {
       return {
         ...state,

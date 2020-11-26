@@ -84,7 +84,8 @@ const PlayerListCard = styled.div`
   width: 100%;
   padding: 5px 15px;
   font-size: 12px;
+  background-color: #ffffff;
   &:hover {
-    box-shadow: 0 0px 8px #afafaf;
+    background-color: #e6f7ff;
   }
 `;
