@@ -17,9 +17,15 @@ function PlayedInfoDefail(data: any): JSX.Element {
   useEffect(() => {
     dispatch(getGameDetail(matchId));
   }, []);
-
+  useEffect(() => {
+    if (matchDetail.matchDetail) {
+      console.log("데이터", matchDetail.matchDetail);
+    }
+  });
   const isWinner = (playerId: string) => {
-    const result = matchDetail.matchDetail.teams[1].players.filter(
+    const winTeamNumb =
+      matchDetail.matchDetail.teams[0].result === "win" ? 0 : 1;
+    const result = matchDetail.matchDetail.teams[winTeamNumb].players.filter(
       (data: string) => {
         return playerId === data;
       }
