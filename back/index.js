@@ -50,9 +50,10 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
       rp(
         `https://api.neople.co.kr/cy/players/${encodeURI(
           requestContext.payload.userId
-        )}/matches?gameTypeId=${
-          requestContext.payload.playType
-        }&limit=100&apikey=${API_KEY}`
+        )}/matches?gameTypeId=${requestContext.payload.playType}&startDate=${
+          requestContext.payload.searchStartRange
+        }&endDate=${requestContext.payload.searchEndRange}
+        &limit=100&apikey=${API_KEY}`
       )
         .then((data) => {
           res.status(200).send(data);
@@ -75,9 +76,10 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
   console.log(
     `https://api.neople.co.kr/cy/players/${encodeURI(
       requestContext.payload.userId
-    )}/matches?gameTypeId=${
-      requestContext.payload.playType
-    }&startDate=<startDate>&endDate=<endDate>&limit=<limit>&next=<next>&?apikey=${API_KEY}`
+    )}/matches?gameTypeId=${requestContext.payload.playType}&startDate=${
+      requestContext.payload.searchStartRange
+    }&endDate=${requestContext.payload.searchEndRange}
+        &limit=100&apikey=${API_KEY}`
   );
 });
 

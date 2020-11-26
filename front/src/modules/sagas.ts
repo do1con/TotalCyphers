@@ -112,9 +112,19 @@ function* searchByNickname(data: string) {
 
 // 유저 전적 검색
 function* getPlayList(data: any) {
-  yield getPlayListByUserId(data.payload.userId, data.payload.playType);
+  yield getPlayListByUserId(
+    data.payload.userId,
+    data.payload.playType,
+    data.payload.searchStartRange,
+    data.payload.searchEndRange
+  );
 }
-function* getPlayListByUserId(userId: string, playType: string) {
+function* getPlayListByUserId(
+  userId: string,
+  playType: string,
+  searchStartRange: string,
+  searchEndRange: string
+) {
   try {
     const payloadData = {
       method: "post",
@@ -124,6 +134,8 @@ function* getPlayListByUserId(userId: string, playType: string) {
         payload: {
           userId,
           playType,
+          searchStartRange,
+          searchEndRange,
         },
       },
     };

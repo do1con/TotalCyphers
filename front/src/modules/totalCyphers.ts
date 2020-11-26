@@ -29,11 +29,18 @@ export const getUserByUserId = (userId: string) => ({
     userId,
   },
 });
-export const getUserPlayList = (userId: string, playType: string) => ({
+export const getUserPlayList = (
+  userId: string,
+  playType: string,
+  searchStartRange: string,
+  searchEndRange: string
+) => ({
   type: GET_USER_PLAYLIST_REQUEST,
   payload: {
     userId,
     playType,
+    searchStartRange,
+    searchEndRange,
   },
 });
 

@@ -15,7 +15,7 @@ import map_springfield from "./../static/media/map_springfield.png";
 function PlayedInfoSec(data: any): JSX.Element {
   const info = data.data;
   useEffect(() => {
-    console.log(info);
+    // console.log(info);
     getDateDiffer();
   });
   const kda = () => {
@@ -274,7 +274,9 @@ function PlayedInfoSec(data: any): JSX.Element {
                   lineHeight: "30px",
                 }}
               >
-                {info.map.name}
+                {info.map.name === "그랑플람 아시아 지부"
+                  ? "그랑플람"
+                  : info.map.name}
               </span>
             </div>
           </div>
