@@ -33,15 +33,17 @@ function Header(): JSX.Element {
             <Title>Total Cyphers</Title>
           </div>
         </Link>
-        <div
-          style={{
-            marginLeft: "auto",
-            width: "300px",
-            height: "32px",
-          }}
-        >
-          <UserSearchBar />
-        </div>
+        {currentUrl.includes("/userInfo/") && (
+          <div
+            style={{
+              marginLeft: "auto",
+              width: "300px",
+              height: "32px",
+            }}
+          >
+            <UserSearchBar />
+          </div>
+        )}
       </div>
     </HeaderContainer>
   );
