@@ -34,9 +34,6 @@ function PlayedInfoSec(data: any): JSX.Element {
     }
     return value.toFixed(2);
   };
-  useEffect(() => {
-    console.log(info);
-  });
   const getDateDiffer = useCallback(() => {
     const strArr = info.date.split("-");
     const dateArr = strArr[2].split(" ");
