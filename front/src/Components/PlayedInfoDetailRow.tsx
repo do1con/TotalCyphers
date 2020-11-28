@@ -1,5 +1,6 @@
 import React from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Popover } from "antd";
+import { Link } from "react-router-dom";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
@@ -24,6 +25,7 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
     console.log("데이터", data);
     console.log("데이터", infoData);
   });
+  const [toRefresh, setToRefresh] = React.useState(false);
   return (
     <Row
       key={index}
@@ -85,18 +87,21 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
             </div>
           </div>
           <div>
-            <span
-              style={{
-                textOverflow: "ellipsis",
-                fontSize: "12px",
-                width: "63px",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                display: "block",
-              }}
-            >
-              {data.nickname}
-            </span>
+            <Link to={`/userInfo/${data.playerId}/reload`}>
+              <span
+                style={{
+                  textOverflow: "ellipsis",
+                  fontSize: "12px",
+                  width: "63px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                  color: "#000000d9",
+                }}
+              >
+                {data.nickname}
+              </span>
+            </Link>
           </div>
         </div>
       </Col>
@@ -200,21 +205,26 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
         >
           {data.items.map((itemData: any, itemIndex: number) => {
             return (
-              <div
-                style={{
-                  borderRadius: "20% 20%",
-                  overflow: "hidden",
-                  margin: "1px",
-                  textAlign: "center",
-                }}
+              <Popover
+                title={itemData.itemName}
+                content={itemData.slotName}
                 key={itemIndex}
               >
-                <img
-                  src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
-                  width="27"
-                  alt="아이템"
-                />
-              </div>
+                <div
+                  style={{
+                    borderRadius: "20% 20%",
+                    overflow: "hidden",
+                    margin: "1px",
+                    textAlign: "center",
+                  }}
+                >
+                  <img
+                    src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
+                    width="27"
+                    alt="아이템"
+                  />
+                </div>
+              </Popover>
             );
           })}
         </div>

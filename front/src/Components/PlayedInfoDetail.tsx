@@ -4,10 +4,6 @@ import styled from "styled-components";
 import { Col, Row } from "antd";
 import { RootState } from "../modules/index";
 import { getGameDetail } from "../modules/totalCyphers";
-import tanker from "./../static/media/tanker.png";
-import suppoter from "./../static/media/supporter.png";
-import geun_dealer from "./../static/media/geun_dealer.png";
-import one_dealer from "./../static/media/one_dealer.png";
 import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
 
 function PlayedInfoDefail(data: any): JSX.Element {
