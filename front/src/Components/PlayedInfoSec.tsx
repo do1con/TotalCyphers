@@ -30,9 +30,9 @@ function PlayedInfoSec(data: any): JSX.Element {
       return "Perfect";
     }
     if (value <= 0) {
-      return 0;
+      return "0 평점";
     }
-    return value.toFixed(2);
+    return String(value.toFixed(2)) + " 평점";
   };
   const getDateDiffer = useCallback(() => {
     const strArr = info.date.split("-");
@@ -175,7 +175,7 @@ function PlayedInfoSec(data: any): JSX.Element {
               {info.playInfo.assistCount}
             </span>
           </div>
-          <div style={{ textAlign: "center" }}>{kda()} 평점</div>
+          <div style={{ textAlign: "center" }}>{kda()}</div>
         </div>
         <div
           style={{
