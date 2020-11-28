@@ -25,14 +25,13 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
     console.log("데이터", data);
     console.log("데이터", infoData);
   });
-  const [toRefresh, setToRefresh] = React.useState(false);
   return (
     <Row
       key={index}
       style={{
-        border: "1px solid #cacaca",
         marginTop: "5px",
         marginBottom: "5px",
+        backgroundColor: "rgb(255 255 255 / 0.5)",
       }}
     >
       <Col
