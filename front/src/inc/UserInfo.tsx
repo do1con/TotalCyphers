@@ -1,20 +1,34 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useParams, useHistory } from "react-router-dom";
 import UserInfoSec from "../Components/UserInfoSec";
 import PlayListSec from "../Components/PlayListSec";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../modules/index";
 import { setCurrentUrl } from "../modules/totalCyphers";
 
-function UserInfo({ match }: any): JSX.Element {
-  const parameter = match.params.userId;
+function UserInfo(): JSX.Element {
+  const parameter: any = useParams();
+  const history = useHistory();
+  const currentUrl = useSelector(
+    (state: RootState) => state.totalCyphers.currentUrl
+  );
+  // eslint-disable-next-line prefer-const
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setCurrentUrl(window.location.href));
+    dispatch(setCurrentUrl(window.location.pathname));
   }, []);
+  useEffect(() => {
+    // history.push(currentUrl);
+    dispatch(setCurrentUrl(window.location.pathname));
+  }, [currentUrl]);
+  // useEffect(() => {
+  //   console.log("오긴하니??", currentUrl);
+  // });
   return (
     <BodyWrapper>
-      <UserInfoSec parameter={parameter} />
-      <PlayListSec parameter={parameter} />
+      <UserInfoSec parameter={parameter.userId} />
+      <PlayListSec parameter={parameter.userId} />
     </BodyWrapper>
   );
 }

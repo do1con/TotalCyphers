@@ -13,12 +13,9 @@ function App(): JSX.Element {
         <Header />
         <Switch>
           <Route path="/" component={MainPageBody} exact />
-          <Route exact path="/userInfo/:userId" component={UserInfo} />
-          <Redirect
-            exact
-            from="/userInfo/:userId/reload"
-            to="/userInfo/:userId"
-          />
+          <Route path="/userInfo/:userId" exact>
+            <UserInfo />
+          </Route>
         </Switch>
         <Footer />
       </BrowserRouter>

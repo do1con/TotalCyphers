@@ -27,6 +27,9 @@ function PlayListSec(parameter: any): JSX.Element {
   useEffect(() => {
     dispatch(getUserPlayList(userId, playListType, before30daysAgo, today));
   }, [playListType]);
+  useEffect(() => {
+    dispatch(getUserPlayList(userId, playListType, before30daysAgo, today));
+  }, [parameter]);
   const onChangeTab = useCallback(
     (key) => {
       setPlayListType(key);

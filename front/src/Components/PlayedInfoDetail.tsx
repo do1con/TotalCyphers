@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Col, Row } from "antd";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { RootState } from "../modules/index";
 import { getGameDetail } from "../modules/totalCyphers";
 import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
@@ -9,6 +10,7 @@ import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
 function PlayedInfoDefail(data: any): JSX.Element {
   const matchId = data.matchId;
   const dispatch = useDispatch();
+  const [showDetail, setShowDetail] = useState(false);
   const [matchDetail] = useSelector((state: RootState) =>
     state.totalCyphers.playedRecords.filter((data) => {
       if (data.matchId === matchId) {
@@ -17,12 +19,15 @@ function PlayedInfoDefail(data: any): JSX.Element {
     })
   );
   useEffect(() => {
-    dispatch(getGameDetail(matchId));
-  }, []);
+    if (showDetail) {
+      dispatch(getGameDetail(matchId));
+    }
+  }, [showDetail]);
   useEffect(() => {
-    if (matchDetail.matchDetail) {
+    if (matchDetail !== undefined) {
       console.log("데이터", matchDetail.matchDetail);
     }
+    console.log("데이터1", matchDetail);
   });
   const kda = (data: any) => {
     const value =
@@ -37,6 +42,9 @@ function PlayedInfoDefail(data: any): JSX.Element {
     }
     return String(value.toFixed(2)) + " 평점";
   };
+  const onClickShowBtn = useCallback(() => {
+    setShowDetail(!showDetail);
+  }, [showDetail, setShowDetail]);
   const isWinner = (playerId: string) => {
     const winTeamNumb =
       matchDetail.matchDetail.teams[0].result === "win" ? 0 : 1;
@@ -50,66 +58,95 @@ function PlayedInfoDefail(data: any): JSX.Element {
   if (matchDetail.matchDetail) {
     return (
       <div>
-        <PlayedInfoWrapper win={matchDetail.playInfo.result}>
-          <Row>
-            <Col span="4">
-              <h3 style={{ textAlign: "center" }}>승리팀</h3>
-            </Col>
-            <Col span="4">
-              <h4 style={{ textAlign: "center" }}>K / D / A</h4>
-            </Col>
-            <Col span="6">
-              <h4 style={{ textAlign: "center" }}>상세 기록</h4>
-            </Col>
-            <Col span="10">
-              <h4 style={{ textAlign: "center" }}>아이템</h4>
-            </Col>
-          </Row>
-          {matchDetail.matchDetail.players &&
-            matchDetail.matchDetail.players.map((data: any, index: number) => {
-              if (isWinner(data.playerId)) {
-                return (
-                  <PlayedInfoDetailRow
-                    infoData={data}
-                    key={index}
-                    index={index}
-                  />
-                );
-              }
-            })}
-        </PlayedInfoWrapper>
-        <PlayedInfoWrapper win={!matchDetail.playInfo.result}>
-          <Row>
-            <Col span="4">
-              <h3 style={{ textAlign: "center" }}>패배팀</h3>
-            </Col>
-            <Col span="4">
-              <h4 style={{ textAlign: "center" }}>K / D / A</h4>
-            </Col>
-            <Col span="6">
-              <h4 style={{ textAlign: "center" }}>상세 기록</h4>
-            </Col>
-            <Col span="10">
-              <h4 style={{ textAlign: "center" }}>아이템</h4>
-            </Col>
-          </Row>
-          {matchDetail.matchDetail.players &&
-            matchDetail.matchDetail.players.map((data: any, index: number) => {
-              if (!isWinner(data.playerId)) {
-                return (
-                  <PlayedInfoDetailRow
-                    infoData={data}
-                    key={index}
-                    index={index}
-                  />
-                );
-              }
-            })}
-        </PlayedInfoWrapper>
+        <PlayedInfoDetailBtn
+          win={matchDetail.playInfo.result === "win"}
+          onClick={onClickShowBtn}
+        >
+          {showDetail ? (
+            <UpOutlined style={{ margin: "0 auto" }} />
+          ) : (
+            <DownOutlined style={{ margin: "0 auto" }} />
+          )}
+        </PlayedInfoDetailBtn>
+        {showDetail && (
+          <div>
+            <PlayedInfoWrapper win={matchDetail.playInfo.result}>
+              <Row>
+                <Col span="4">
+                  <h3 style={{ textAlign: "center" }}>승리팀</h3>
+                </Col>
+                <Col span="4">
+                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                </Col>
+                <Col span="6">
+                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                </Col>
+                <Col span="10">
+                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                </Col>
+              </Row>
+              {matchDetail.matchDetail.players &&
+                matchDetail.matchDetail.players.map(
+                  (data: any, index: number) => {
+                    if (isWinner(data.playerId)) {
+                      return (
+                        <PlayedInfoDetailRow
+                          infoData={data}
+                          key={index}
+                          index={index}
+                        />
+                      );
+                    }
+                  }
+                )}
+            </PlayedInfoWrapper>
+            <PlayedInfoWrapper win={!matchDetail.playInfo.result}>
+              <Row>
+                <Col span="4">
+                  <h3 style={{ textAlign: "center" }}>패배팀</h3>
+                </Col>
+                <Col span="4">
+                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                </Col>
+                <Col span="6">
+                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                </Col>
+                <Col span="10">
+                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                </Col>
+              </Row>
+              {matchDetail.matchDetail.players &&
+                matchDetail.matchDetail.players.map(
+                  (data: any, index: number) => {
+                    if (!isWinner(data.playerId)) {
+                      return (
+                        <PlayedInfoDetailRow
+                          infoData={data}
+                          key={index}
+                          index={index}
+                        />
+                      );
+                    }
+                  }
+                )}
+            </PlayedInfoWrapper>
+          </div>
+        )}
       </div>
     );
   } else {
-    return <div>로딩 중...</div>;
+    return (
+      <PlayedInfoDetailBtn
+        win={matchDetail.playInfo.result === "win"}
+        onClick={onClickShowBtn}
+      >
+        {showDetail ? (
+          <UpOutlined style={{ margin: "0 auto" }} />
+        ) : (
+          <DownOutlined style={{ margin: "0 auto" }} />
+        )}
+      </PlayedInfoDetailBtn>
+    );
   }
 }
 
@@ -121,4 +158,11 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   align-items: center;
   position: relative;
   padding: 10px;
+`;
+const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
+  width: 100%;
+  height: 22px;
+  background-color ${(props) => (props.win ? "#91d5ff" : "#ffa39e")};
+  text-align: center;
+  cursor: pointer
 `;

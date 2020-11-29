@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col, Popover } from "antd";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUrl } from "../modules/totalCyphers";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
@@ -8,6 +10,7 @@ import one_dealer from "./../static/media/one_dealer.png";
 
 function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
   const data = infoData.infoData;
+  const dispatch = useDispatch();
   const kda = (data: any) => {
     const value =
       (data.playInfo.killCount + data.playInfo.assistCount) /
@@ -22,8 +25,8 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
     return String(value.toFixed(2)) + " 평점";
   };
   React.useEffect(() => {
-    console.log("데이터", data);
-    console.log("데이터", infoData);
+    // console.log("데이터", data);
+    // console.log("데이터", infoData);
   });
   return (
     <Row
@@ -86,7 +89,12 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
             </div>
           </div>
           <div>
-            <Link to={`/userInfo/${data.playerId}/reload`}>
+            <Link
+              to={`/userInfo/${data.playerId}`}
+              onClick={(e: any) => {
+                dispatch(setCurrentUrl(`/userInfo/${data.playerId}`));
+              }}
+            >
               <span
                 style={{
                   textOverflow: "ellipsis",
