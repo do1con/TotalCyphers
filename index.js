@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
 const rp = require("request-promise");
+const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
 const API_KEY = process.env.API_KEY;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "front/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/front/build/index.html"));
+});
 
 app.post("/proxy/totalcyphers/", async (req, res) => {
   const requestContext = req.body.data;
