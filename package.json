@@ -4,7 +4,8 @@
   "description": "total-cyphers proxy server",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node index.js"
   },
   "author": "Seongsoo Kim",
   "license": "ISC",
