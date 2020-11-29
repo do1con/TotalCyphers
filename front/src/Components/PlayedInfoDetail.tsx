@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Col, Row } from "antd";
@@ -18,17 +18,6 @@ function PlayedInfoDefail(data: any): JSX.Element {
       }
     })
   );
-  useEffect(() => {
-    if (showDetail) {
-      dispatch(getGameDetail(matchId));
-    }
-  }, [showDetail]);
-  useEffect(() => {
-    if (matchDetail !== undefined) {
-      console.log("데이터", matchDetail.matchDetail);
-    }
-    console.log("데이터1", matchDetail);
-  });
   const kda = (data: any) => {
     const value =
       (data.playInfo.killCount + data.playInfo.assistCount) /
@@ -43,8 +32,11 @@ function PlayedInfoDefail(data: any): JSX.Element {
     return String(value.toFixed(2)) + " 평점";
   };
   const onClickShowBtn = useCallback(() => {
+    if (!showDetail) {
+      dispatch(getGameDetail(matchId));
+    }
     setShowDetail(!showDetail);
-  }, [showDetail, setShowDetail]);
+  }, [showDetail, setShowDetail, dispatch, getGameDetail, matchId]);
   const isWinner = (playerId: string) => {
     const winTeamNumb =
       matchDetail.matchDetail.teams[0].result === "win" ? 0 : 1;
@@ -91,9 +83,9 @@ function PlayedInfoDefail(data: any): JSX.Element {
                     if (isWinner(data.playerId)) {
                       return (
                         <PlayedInfoDetailRow
-                          infoData={data}
                           key={index}
-                          index={index}
+                          infoData={data}
+                          setShowState={setShowDetail}
                         />
                       );
                     }
@@ -121,9 +113,9 @@ function PlayedInfoDefail(data: any): JSX.Element {
                     if (!isWinner(data.playerId)) {
                       return (
                         <PlayedInfoDetailRow
-                          infoData={data}
                           key={index}
-                          index={index}
+                          infoData={data}
+                          setShowState={setShowDetail}
                         />
                       );
                     }

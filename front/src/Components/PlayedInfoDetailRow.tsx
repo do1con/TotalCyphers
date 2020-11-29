@@ -8,7 +8,7 @@ import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
 import one_dealer from "./../static/media/one_dealer.png";
 
-function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
+function PlayedInfoDetailRow(infoData: any, setShowState: any): JSX.Element {
   const data = infoData.infoData;
   const dispatch = useDispatch();
   const kda = (data: any) => {
@@ -24,13 +24,8 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
     }
     return String(value.toFixed(2)) + " 평점";
   };
-  React.useEffect(() => {
-    // console.log("데이터", data);
-    // console.log("데이터", infoData);
-  });
   return (
     <Row
-      key={index}
       style={{
         marginTop: "5px",
         marginBottom: "5px",
@@ -93,6 +88,7 @@ function PlayedInfoDetailRow(infoData: any, index: number): JSX.Element {
               to={`/userInfo/${data.playerId}`}
               onClick={(e: any) => {
                 dispatch(setCurrentUrl(`/userInfo/${data.playerId}`));
+                infoData.setShowState(false);
               }}
             >
               <span
