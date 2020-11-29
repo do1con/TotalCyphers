@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "front/build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/front/build/index.html"));
+  console.log("더네임", __dirname);
 });
 
 app.post("/proxy/totalcyphers/", async (req, res) => {
@@ -102,7 +103,8 @@ app.post("/proxy/totalcyphers/test/", (req, res) => {
   res.send("test");
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`APP is listening on port ${PORT}`);
+const SERVER_PORT = 5000;
+const HOST = "0.0.0.0";
+app.listen(SERVER_PORT || 5000, HOST, () => {
+  console.log(`APP is listening on port ${SERVER_PORT}`);
 });
