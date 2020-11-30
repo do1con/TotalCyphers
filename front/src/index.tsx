@@ -4,17 +4,29 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer, { rootSaga } from "./modules";
 import createSagaMiddleware from "redux-saga";
 
-const sagaMiddleware = createSagaMiddleware();
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware))
-);
+// const sagaMiddleware = createSagaMiddleware();
+// const composeEnhancers = composeWithDevTools(applyMiddleware(sagaMiddleware));
+// const store = createStore(
+//   rootReducer,
+//   composeWithDevTools(applyMiddleware(sagaMiddleware))
+// );
 
+// sagaMiddleware.run(rootSaga);
+
+const sagaMiddleware = createSagaMiddleware();
+const middleware = [sagaMiddleware];
+const enhancer =
+  process.env.NODE_ENV === "development"
+    ? composeWithDevTools(applyMiddleware(...middleware))
+    : compose(applyMiddleware(...middleware));
+const justSet = compose(applyMiddleware(...middleware));
+const composeEnhancers = composeWithDevTools(applyMiddleware(sagaMiddleware));
+const store = createStore(rootReducer, justSet);
 sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(

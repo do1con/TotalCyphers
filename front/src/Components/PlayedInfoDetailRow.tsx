@@ -7,11 +7,26 @@ import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
 import one_dealer from "./../static/media/one_dealer.png";
+import { PlayerInfo } from "./PlayedInfoDetail";
 
-function PlayedInfoDetailRow(infoData: any, setShowState: any): JSX.Element {
+type ItemData = {
+  itemId: string;
+  itemName: string;
+  slotCode: string;
+  slotName: string;
+  rarityCode: string;
+  rarityName: string;
+  equipSlotCode: string;
+  equipSlotName: string;
+};
+
+function PlayedInfoDetailRow(infoData: {
+  infoData: PlayerInfo;
+  setShowState: React.Dispatch<React.SetStateAction<boolean>>;
+}): JSX.Element {
   const data = infoData.infoData;
   const dispatch = useDispatch();
-  const kda = (data: any) => {
+  const kda = (data: PlayerInfo) => {
     const value =
       (data.playInfo.killCount + data.playInfo.assistCount) /
       data.playInfo.deathCount;
@@ -86,7 +101,7 @@ function PlayedInfoDetailRow(infoData: any, setShowState: any): JSX.Element {
           <div>
             <Link
               to={`/userInfo/${data.playerId}`}
-              onClick={(e: any) => {
+              onClick={() => {
                 dispatch(setCurrentUrl(`/userInfo/${data.playerId}`));
                 infoData.setShowState(false);
               }}
@@ -206,7 +221,7 @@ function PlayedInfoDetailRow(infoData: any, setShowState: any): JSX.Element {
             flexWrap: "wrap",
           }}
         >
-          {data.items.map((itemData: any, itemIndex: number) => {
+          {data.items.map((itemData: ItemData, itemIndex: number) => {
             return (
               <Popover
                 title={itemData.itemName}

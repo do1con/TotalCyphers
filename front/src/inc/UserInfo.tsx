@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserInfoSec from "../Components/UserInfoSec";
 import PlayListSec from "../Components/PlayListSec";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,7 @@ import { RootState } from "../modules/index";
 import { setCurrentUrl } from "../modules/totalCyphers";
 
 function UserInfo(): JSX.Element {
-  const parameter: any = useParams();
-  const history = useHistory();
+  const parameter: { userId: string } = useParams();
   const currentUrl = useSelector(
     (state: RootState) => state.totalCyphers.currentUrl
   );

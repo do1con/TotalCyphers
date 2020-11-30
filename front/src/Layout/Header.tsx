@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import total_cyphers_logo from "../static/media/total_cyphers_logo.png";
 import UserSearchBar from "../Components/UserSearchBar";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../modules/index";
 
 function Header(): JSX.Element {

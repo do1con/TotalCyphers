@@ -1,5 +1,5 @@
-import { delay, put, takeLatest, takeEvery, call } from "redux-saga/effects";
-import axios, { AxiosResponse } from "axios";
+import { put, takeLatest, call } from "redux-saga/effects";
+import axios from "axios";
 
 export const SEARCH_USER_NICKNAME_REQUEST = "totalCyphers/SEARCH_USER_NICKNAME_REQUEST" as const;
 export const SEARCH_USER_NICKNAME_SUCCESS = "totalCyphers/SEARCH_USER_NICKNAME_SUCCESS" as const;
@@ -14,32 +14,16 @@ export const GET_GAME_DETAIL_REQUEST = "totalCyphers/GET_GAME_DETAIL_REQUEST" as
 export const GET_GAME_DETAIL_SUCCESS = "totalCyphers/GET_GAME_DETAIL_SUCCESS" as const;
 export const GET_GAME_DETAIL_FAILURE = "totalCyphers/GET_GAME_DETAIL_FAILURE" as const;
 
-// 액션 객체 타입
-interface TotalCyphersNoPayloadAction {
-  type: string;
-}
-
-interface TotalCyphersSuccessSearchUser {
-  type: string;
-  payload: {
-    playerId: string;
-    nickname: string;
-    grade: number;
-  };
-}
-
-type TotalCyphersAction =
-  | ReturnType<typeof searchUserSuccess>
-  | ReturnType<typeof searchUserFailed>;
-
 // 응답 액션 정의
 // 유저 닉네임으로 검색
-export const searchUserSuccess = (data: any) => ({
-  type: SEARCH_USER_NICKNAME_SUCCESS,
-  payload: {
-    searchedPlayers: data.rows,
-  },
-});
+export const searchUserSuccess = (data: any) => {
+  return {
+    type: SEARCH_USER_NICKNAME_SUCCESS,
+    payload: {
+      searchedPlayers: data.rows,
+    },
+  };
+};
 export const searchUserFailed = (err: any) => ({
   type: SEARCH_USER_NICKNAME_FAILURE,
   payload: {
