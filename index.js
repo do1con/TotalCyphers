@@ -15,9 +15,9 @@ app.get("*", (req, res) => {
 });
 
 app.post("/proxy/totalcyphers/", async (req, res) => {
+  console.log("리퀘스트 컨텍스트", req.body.data);
   const requestContext = req.body.data;
   const requestMethod = requestContext.reqMethod;
-  console.log("리퀘스트 컨텍스트", requestContext);
 
   switch (requestMethod) {
     case "getUserByNickname": {
