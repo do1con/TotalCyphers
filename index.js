@@ -15,7 +15,7 @@ app.get("*", (req, res) => {
 });
 
 app.post("/proxy/totalcyphers/", async (req, res) => {
-  console.log("리퀘스트 컨텍스트", req.body.data);
+  console.log("리퀘스트 컨텍스트", req.body);
   const requestContext = req.body.data;
   const requestMethod = requestContext.reqMethod;
 
