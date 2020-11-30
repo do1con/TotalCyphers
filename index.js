@@ -17,6 +17,7 @@ app.get("*", (req, res) => {
 app.post("/proxy/totalcyphers/", async (req, res) => {
   const requestContext = req.body.data;
   const requestMethod = requestContext.reqMethod;
+  console.log("리퀘스트 컨텍스트", requestContext);
 
   switch (requestMethod) {
     case "getUserByNickname": {
@@ -108,4 +109,5 @@ const HOST = "0.0.0.0";
 // @ts-ignore
 app.listen(process.env.PORT || 5000, HOST, () => {
   console.log(`APP is listening on port ${SERVER_PORT}`);
+  console.log(process.env.PORT);
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Col, Row } from "antd";
@@ -7,7 +7,74 @@ import { RootState } from "../modules/index";
 import { getGameDetail } from "../modules/totalCyphers";
 import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
 
-function PlayedInfoDefail(data: any): JSX.Element {
+export type PlayerInfo = {
+  items: Array<{
+    itemId: string;
+    itemName: string;
+    slotCode: string;
+    slotName: string;
+    rarityCode: string;
+    rarityName: string;
+    equipSlotCode: string;
+    equipSlotName: string;
+  }>;
+  map: {
+    mapId: string;
+    name: string;
+  };
+  nickname: string;
+  playInfo: {
+    assistCount: number;
+    attackPoint: number;
+    backAttackCount: number;
+    battlePoint: number;
+    characterId: string;
+    characterName: string;
+    comboCount: number;
+    damagePoint: number;
+    deathCount: number;
+    demolisherKillCount: number;
+    getCoin: number;
+    guardTowerKillCount: number;
+    guardianKillCount: number;
+    healAmount: number;
+    killCount: number;
+    level: number;
+    maxLifeTime: number;
+    minLifeTime: number;
+    partyInfo?: Array<{
+      playerId: string;
+      nickname: string;
+      characterName: string;
+      characterId: string;
+    }>;
+    partyUserCount: number;
+    playTime: number;
+    playTypeName: string;
+    random: boolean;
+    responseTime: number;
+    result: string;
+    sentinelKillCount: number;
+    sightPoint: number;
+    spellCount: number;
+    spendCoin: number;
+    spendConsumablesCount: number;
+    towerAttackPoint: number;
+    trooperKillCount: number;
+  };
+  playerId: string;
+  position: {
+    attribute: Array<{
+      level: number;
+      id: string;
+      name: string;
+    }>;
+    explain: string;
+    name: string;
+  };
+};
+
+function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
   const matchId = data.matchId;
   const dispatch = useDispatch();
   const [showDetail, setShowDetail] = useState(false);
@@ -18,19 +85,6 @@ function PlayedInfoDefail(data: any): JSX.Element {
       }
     })
   );
-  const kda = (data: any) => {
-    const value =
-      (data.playInfo.killCount + data.playInfo.assistCount) /
-      data.playInfo.deathCount;
-
-    if (value === Infinity) {
-      return "Perfect";
-    }
-    if (value <= 0) {
-      return "0 평점";
-    }
-    return String(value.toFixed(2)) + " 평점";
-  };
   const onClickShowBtn = useCallback(() => {
     if (!showDetail) {
       dispatch(getGameDetail(matchId));
@@ -79,7 +133,7 @@ function PlayedInfoDefail(data: any): JSX.Element {
               </Row>
               {matchDetail.matchDetail.players &&
                 matchDetail.matchDetail.players.map(
-                  (data: any, index: number) => {
+                  (data: PlayerInfo, index: number) => {
                     if (isWinner(data.playerId)) {
                       return (
                         <PlayedInfoDetailRow
@@ -109,7 +163,7 @@ function PlayedInfoDefail(data: any): JSX.Element {
               </Row>
               {matchDetail.matchDetail.players &&
                 matchDetail.matchDetail.players.map(
-                  (data: any, index: number) => {
+                  (data: PlayerInfo, index: number) => {
                     if (!isWinner(data.playerId)) {
                       return (
                         <PlayedInfoDetailRow

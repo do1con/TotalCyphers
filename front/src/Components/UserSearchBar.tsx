@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -15,6 +15,7 @@ function UserSearchBar(): JSX.Element {
   }, []);
   const { Search } = Input;
   const dispatch = useDispatch();
+  const [test, setTeset] = useState("테스트");
 
   const searchedPlayers = useSelector(
     (state: RootState) => state.totalCyphers.searchedPlayers
@@ -31,6 +32,7 @@ function UserSearchBar(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let lastTimeFunc: any;
   const onChangeSearchBar = (e: any) => {
+    setTeset(e.target.value);
     if (lastTimeFunc) {
       clearTimeout(lastTimeFunc);
       lastTimeFunc = null;
@@ -67,6 +69,7 @@ function UserSearchBar(): JSX.Element {
             })}
         </SearchedList>
       </Form.Item>
+      {test}
     </Form>
   );
 }
@@ -78,6 +81,8 @@ const SearchedList = styled.div`
   width: 100%;
   overflow: hidden;
   box-shadow: 0 2px 8px #cfcfcf;
+  position: relative;
+  z-index: 3;
 `;
 
 const PlayerListCard = styled.div`

@@ -2,13 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Card, Tabs, Button, Popover } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
-import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules/index";
 import { getUserPlayList } from "../modules/totalCyphers";
 import PlayedInfoSec from "./PlayedInfoSec";
 
-function PlayListSec(parameter: any): JSX.Element {
+function PlayListSec(parameter: { parameter: string }): JSX.Element {
   const { TabPane } = Tabs;
   const dateFormat = "YYYY-MM-DD" as const;
   const today = moment().format(dateFormat);

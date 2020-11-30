@@ -1,8 +1,6 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { Popover } from "antd";
-import { useSelector } from "react-redux";
-import { RootState } from "../modules/index";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
@@ -16,9 +14,63 @@ import map_metropolis from "./../static/media/map_metropolis.png";
 import map_springfield from "./../static/media/map_springfield.png";
 import PlayedInfoDefail from "./PlayedInfoDetail";
 
-function PlayedInfoSec(data: any): JSX.Element {
-  const info = data.data;
-  const kda = () => {
+type GameData = {
+  date: string;
+  map: { mapId: string; name: string };
+  matchId: string;
+  playInfo: {
+    assistCount: number;
+    attackPoint: number;
+    backAttackCount: number;
+    battlePoint: number;
+    characterId: string;
+    characterName: string;
+    comboCount: number;
+    damagePoint: number;
+    deathCount: number;
+    demolisherKillCount: number;
+    getCoin: number;
+    guardTowerKillCount: number;
+    guardianKillCount: number;
+    healAmount: number;
+    killCount: number;
+    level: number;
+    maxLifeTime: number;
+    minLifeTime: number;
+    partyInfo?: Array<{
+      playerId: string;
+      nickname: string;
+      characterName: string;
+      characterId: string;
+    }>;
+    partyUserCount: number;
+    playTime: number;
+    playTypeName: string;
+    random: boolean;
+    responseTime: number;
+    result: string;
+    sentinelKillCount: number;
+    sightPoint: number;
+    spellCount: number;
+    spendCoin: number;
+    spendConsumablesCount: number;
+    towerAttackPoint: number;
+    trooperKillCount: number;
+  };
+  position: {
+    attribute: Array<{
+      level: number;
+      id: string;
+      name: string;
+    }>;
+    explain: string;
+    name: string;
+  };
+};
+
+function PlayedInfoSec(data: { data: GameData }): JSX.Element {
+  const info: GameData = data.data;
+  const kda = (): string => {
     const value =
       (info.playInfo.killCount + info.playInfo.assistCount) /
       info.playInfo.deathCount;
@@ -196,28 +248,37 @@ function PlayedInfoSec(data: any): JSX.Element {
             </span>
           </div>
           <div style={{ margin: "10px", position: "relative", zIndex: 3 }}>
-            {info.position.attribute.map((data: any, index: number) => (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  overflow: "hidden",
-                }}
-                key={index}
-              >
-                <div>
-                  <img
-                    src={`https://img-api.neople.co.kr/cy/position-attributes/${data.id}`}
-                    alt="특성"
-                    width="27"
-                    style={{
-                      borderRadius: "25% 25%",
-                    }}
-                  />
-                  <span style={{ fontSize: "12px" }}>&nbsp;{data.name}</span>
+            {info.position.attribute.map(
+              (
+                data: {
+                  level: number;
+                  id: string;
+                  name: string;
+                },
+                index: number
+              ) => (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                  }}
+                  key={index}
+                >
+                  <div>
+                    <img
+                      src={`https://img-api.neople.co.kr/cy/position-attributes/${data.id}`}
+                      alt="특성"
+                      width="27"
+                      style={{
+                        borderRadius: "25% 25%",
+                      }}
+                    />
+                    <span style={{ fontSize: "12px" }}>&nbsp;{data.name}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
           <div
             style={{
