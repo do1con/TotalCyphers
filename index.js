@@ -32,7 +32,9 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         })
         .catch((err) => {
           console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
-          res.status(500).send(err);
+          res
+            .status(500)
+            .send("정상적인 요청을 처리하던 중 에러가 발생했습니다.");
         });
       break;
     }
@@ -48,7 +50,9 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         })
         .catch((err) => {
           console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
-          res.status(500).send(err);
+          res
+            .status(500)
+            .send("정상적인 요청을 처리하던 중 에러가 발생했습니다.");
         });
       break;
     }
@@ -67,7 +71,9 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         })
         .catch((err) => {
           console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
-          res.status(500).send(err);
+          res
+            .status(500)
+            .send("정상적인 요청을 처리하던 중 에러가 발생했습니다.");
         });
       break;
     }
@@ -81,7 +87,9 @@ app.post("/proxy/totalcyphers/", async (req, res) => {
         })
         .catch((err) => {
           console.log("정상적인 요청을 처리하던 중 에러가 발생했습니다.", err);
-          res.status(500).send(err);
+          res
+            .status(500)
+            .send("정상적인 요청을 처리하던 중 에러가 발생했습니다.");
         });
       break;
     }
