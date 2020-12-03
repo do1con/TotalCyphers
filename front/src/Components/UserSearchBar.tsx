@@ -21,24 +21,32 @@ function UserSearchBar(): JSX.Element {
     (state: RootState) => state.totalCyphers
   );
   const [typedOneChar, setTypedOneChar] = useState(false);
+  const [activePlayer, setActivePlayer] = useState(0);
+  const [typedFullChar, setTypedFullChar] = useState("");
 
   const onSubmitSearchNickname = useCallback(
     (e: string) => {
-      dispatch(searchUserByNickname(e));
+      searchedPlayers.forEach((item) => {
+        if (item.nickname === e) {
+          location.replace(`/userInfo/${item.playerId}`);
+        }
+      });
     },
-    [dispatch, searchUserByNickname]
+    [searchedPlayers]
   );
 
   // 디바운싱
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let lastTimeFunc: any;
   const onChangeSearchBar = (e: any) => {
+    setTypedFullChar(e.target.value);
     if (lastTimeFunc) {
       clearTimeout(lastTimeFunc);
       lastTimeFunc = null;
     }
     lastTimeFunc = setTimeout(() => {
-      console.log("디바운싱");
+      setTypedFullChar(e.target.value);
+      setActivePlayer(0);
       if (e.target.value.length === 1) {
         dispatch(searchedPlayersReset);
         setTypedOneChar(true);
@@ -56,6 +64,18 @@ function UserSearchBar(): JSX.Element {
       }
     }, 400);
   };
+  const onKeyUpSearchBar = (e: any) => {
+    if (e.key === "ArrowUp" && activePlayer > 0) {
+      e.target.value = searchedPlayers[activePlayer - 1].nickname;
+      setTypedFullChar(searchedPlayers[activePlayer - 1].nickname);
+      setActivePlayer(activePlayer - 1);
+    }
+    if (e.key === "ArrowDown" && activePlayer < 4) {
+      e.target.value = searchedPlayers[activePlayer + 1].nickname;
+      setTypedFullChar(searchedPlayers[activePlayer + 1].nickname);
+      setActivePlayer(activePlayer + 1);
+    }
+  };
   return (
     <Form>
       <Form.Item>
@@ -65,6 +85,8 @@ function UserSearchBar(): JSX.Element {
           enterButton
           onSearch={onSubmitSearchNickname}
           onChange={onChangeSearchBar}
+          onKeyUp={onKeyUpSearchBar}
+          value={typedFullChar}
         />
         <SearchedList>
           {searchingUser && (
@@ -86,7 +108,7 @@ function UserSearchBar(): JSX.Element {
               if (index < 6) {
                 return (
                   <Link to={`/userInfo/${data.playerId}`} key={index}>
-                    <PlayerListCard>
+                    <PlayerListCard focus={activePlayer === index}>
                       <span>{data.nickname}</span>
                       <span style={{ float: "right", color: "#9f9f9f" }}>
                         {data.grade} 급
@@ -113,11 +135,11 @@ const SearchedList = styled.div`
   z-index: 3;
 `;
 
-const PlayerListCard = styled.div`
+const PlayerListCard = styled.div<{ focus?: boolean }>`
   width: 100%;
   padding: 5px 15px;
   font-size: 12px;
-  background-color: #ffffff;
+  background-color: ${(props) => (props.focus ? "#e6f7ff;" : "#ffffff;")}
   &:hover {
     background-color: #e6f7ff;
   }
@@ -125,7 +147,7 @@ const PlayerListCard = styled.div`
 
 const LoadingSkeleton = () => {
   return (
-    <PlayerListCard>
+    <PlayerListCard focus={false}>
       <Skeleton.Input
         style={{ width: "50px", height: "16px" }}
         active
