@@ -78,6 +78,7 @@ export type totalCypherState = {
   searchingUser: boolean;
   searchUserErrorReason: string;
   focusedUser: any;
+  focusingUser: boolean;
   playedRecords: Array<any>;
   getUserPlaylistFailReason: string;
   getUserInfoFailReason: string;
@@ -92,6 +93,7 @@ export const initialState: totalCypherState = {
   searchingUser: false,
   searchUserErrorReason: "",
   focusedUser: "",
+  focusingUser: false,
   playedRecords: [],
   getUserPlaylistFailReason: "",
   getUserInfoFailReason: "",
@@ -137,16 +139,24 @@ export default function totalCyphersReducer(
         searchedPlayers: [],
       };
     }
+    case GET_USER_INFO_REQUEST: {
+      return {
+        ...state,
+        focusingUser: true,
+      };
+    }
     case GET_USER_INFO_SUCCESS: {
       return {
         ...state,
         focusedUser: action.payload.focusedUser,
+        focusingUser: false,
       };
     }
     case GET_USER_INFO_FAILURE: {
       return {
         ...state,
         getUserInfoFailReason: action.payload.getUserInfoErrorReason,
+        focusingUser: false,
       };
     }
     case RESET_SEARCHED_USER_LIST: {
