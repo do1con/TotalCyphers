@@ -40,4 +40,9 @@ const BodyWrapper = styled.div`
   display: flex;
   padding: 50px;
   justify-content: space-between;
+  @media (max-width: 767px) {
+    width: 80%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 `;

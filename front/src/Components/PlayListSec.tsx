@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Card, Tabs, Button, Popover } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules/index";
 import { getUserPlayList } from "../modules/totalCyphers";
@@ -45,36 +46,37 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
   }, [showLimit, setShowLimit, setIsLastRecord, playedList]);
   if (playedList) {
     return (
-      <Card
-        style={{ width: "70%" }}
-        title={
-          <span className="ㅇㅇ">
-            최근 경기{" "}
-            <Popover
-              content={"오늘부터 90일 전까지 최대 100개의 전적이 조회됩니다."}
-            >
-              <InfoCircleOutlined />
-            </Popover>
-          </span>
-        }
-      >
-        <Tabs defaultActiveKey="normal" onChange={onChangeTab}>
-          <TabPane tab="일반전" key="normal"></TabPane>
-          <TabPane tab="공식전" key="rating"></TabPane>
-        </Tabs>
-        {playedList.map((data, index) => {
-          if (index <= showLimit) {
-            return <PlayedInfoSec data={data} key={index} />;
+      <PlayedListWrapper>
+        <Card
+          title={
+            <span className="ㅇㅇ">
+              최근 경기{" "}
+              <Popover
+                content={"오늘부터 90일 전까지 최대 100개의 전적이 조회됩니다."}
+              >
+                <InfoCircleOutlined />
+              </Popover>
+            </span>
           }
-        })}
-        {!isLastRecord ? (
-          <div style={{ width: "100%", textAlign: "center" }}>
-            <Button onClick={onClickShowMore}>더 보기</Button>
-          </div>
-        ) : (
-          "조회할 수 있는 마지막 경기입니다."
-        )}
-      </Card>
+        >
+          <Tabs defaultActiveKey="normal" onChange={onChangeTab}>
+            <TabPane tab="일반전" key="normal"></TabPane>
+            <TabPane tab="공식전" key="rating"></TabPane>
+          </Tabs>
+          {playedList.map((data, index) => {
+            if (index <= showLimit) {
+              return <PlayedInfoSec data={data} key={index} />;
+            }
+          })}
+          {!isLastRecord ? (
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <Button onClick={onClickShowMore}>더 보기</Button>
+            </div>
+          ) : (
+            "조회할 수 있는 마지막 경기입니다."
+          )}
+        </Card>
+      </PlayedListWrapper>
     );
   } else {
     return <div>로딩 중...</div>;
@@ -82,3 +84,10 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
 }
 
 export default PlayListSec;
+
+const PlayedListWrapper = styled.div`
+  width: 70%;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+`;
