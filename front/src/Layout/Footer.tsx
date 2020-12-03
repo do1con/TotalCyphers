@@ -29,18 +29,22 @@ const FooterContainer = styled.footer`
   width: 100%;
   height: 50px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const CopyWrites = styled.div`
-  width: 50%;
   height: 50px;
-  padding-right: 50px;
+  padding-left: 30px;
+  padding-right: 30px;
   box-sizing: border-box;
 `;
 
 const PoweredBy = styled.div`
-  width: 50%;
   height: 50px;
+  padding-left: 30px;
+  padding-right: 30px;
+  box-sizing: border-box;
 `;
 
 export default Footer;

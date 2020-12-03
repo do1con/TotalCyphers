@@ -21,7 +21,7 @@ function MainPageBody(): JSX.Element {
           </MainImageWrapper>
           <MainName>
             <Title>Total Cyphers</Title>
-            <SubTitle>사이퍼즈 전적 · 통계</SubTitle>
+            <SubTitle>사이퍼즈 전적 검색</SubTitle>
           </MainName>
         </MainWrapper>
         <div className="searchBar">
@@ -42,8 +42,17 @@ const BodyContainer = styled.main`
 `;
 
 const BodyWrapper = styled.div`
-  width: 1000px;
+  width: 80%;
   margin: 0 auto;
+  @media (min-width: 1000px) {
+    font-size: 16px;
+    width: 1000px;
+    margin: 0 auto;
+  }
+  @media (max-width: 999px) {
+    width: 80%;
+    margin: 0 auto;
+  }
 `;
 
 const MainWrapper = styled.div`
@@ -60,6 +69,10 @@ const MainImageWrapper = styled.div`
   width: 150px;
   height: 150px;
   position: relative;
+  @media (max-width: 500px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const GearBackground = styled.div`
@@ -69,6 +82,10 @@ const GearBackground = styled.div`
   height: 150px;
   position: absolute;
   filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.5));
+  @media (max-width: 500px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const GearDiv = styled.div`
@@ -116,6 +133,10 @@ const GearDiv = styled.div`
     to {
       transform: rotate(360deg);
     }
+  }
+  @media (max-width: 500px) {
+    width: 100px;
+    height: 100px;
   }
 `;
 
