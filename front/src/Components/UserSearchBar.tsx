@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, Input } from "antd";
+import { Form, Input, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
   searchUserByNickname,
   resetSearchUserList,
+  searchedPlayersReset,
 } from "../modules/totalCyphers";
 import { RootState } from "../modules/index";
 
@@ -16,9 +17,10 @@ function UserSearchBar(): JSX.Element {
   const { Search } = Input;
   const dispatch = useDispatch();
 
-  const searchedPlayers = useSelector(
-    (state: RootState) => state.totalCyphers.searchedPlayers
+  const { searchedPlayers, searchingUser } = useSelector(
+    (state: RootState) => state.totalCyphers
   );
+  const [typedOneChar, setTypedOneChar] = useState(false);
 
   const onSubmitSearchNickname = useCallback(
     (e: string) => {
@@ -36,8 +38,23 @@ function UserSearchBar(): JSX.Element {
       lastTimeFunc = null;
     }
     lastTimeFunc = setTimeout(() => {
-      dispatch(searchUserByNickname(e.target.value));
-    }, 300);
+      console.log("디바운싱");
+      if (e.target.value.length === 1) {
+        dispatch(searchedPlayersReset);
+        setTypedOneChar(true);
+        return;
+      }
+      if (e.target.value !== "") {
+        dispatch(searchUserByNickname(e.target.value));
+        setTypedOneChar(false);
+        return;
+      }
+      if (e.target.value === "") {
+        dispatch(searchedPlayersReset);
+        setTypedOneChar(false);
+        return;
+      }
+    }, 400);
   };
   return (
     <Form>
@@ -50,6 +67,20 @@ function UserSearchBar(): JSX.Element {
           onChange={onChangeSearchBar}
         />
         <SearchedList>
+          {searchingUser && (
+            <>
+              <LoadingSkeleton />
+              <LoadingSkeleton />
+              <LoadingSkeleton />
+              <LoadingSkeleton />
+              <LoadingSkeleton />
+            </>
+          )}
+          {typedOneChar && (
+            <span style={{ display: "block", padding: "5px" }}>
+              최소 두 글자가 필요합니다.
+            </span>
+          )}
           {searchedPlayers.length > 0 &&
             searchedPlayers.map((data, index) => {
               if (index < 6) {
@@ -91,3 +122,22 @@ const PlayerListCard = styled.div`
     background-color: #e6f7ff;
   }
 `;
+
+const LoadingSkeleton = () => {
+  return (
+    <PlayerListCard>
+      <Skeleton.Input
+        style={{ width: "50px", height: "16px" }}
+        active
+        size="small"
+      />
+      <span style={{ float: "right" }}>
+        <Skeleton.Input
+          style={{ width: "40px", height: "16px" }}
+          active
+          size="small"
+        />
+      </span>
+    </PlayerListCard>
+  );
+};

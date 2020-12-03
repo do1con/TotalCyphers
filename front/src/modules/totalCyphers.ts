@@ -26,6 +26,9 @@ export const searchUserByNickname = (nickname: string) => ({
     nickname,
   },
 });
+export const searchedPlayersReset = {
+  type: "SEARCHED_PLAYERS_RESET",
+};
 export const getUserByUserId = (userId: string) => ({
   type: GET_USER_INFO_REQUEST,
   payload: {
@@ -72,6 +75,7 @@ type TotalCyphersAction =
 // 기본값 타입
 export type totalCypherState = {
   searchedPlayers: Array<any>;
+  searchingUser: boolean;
   searchUserErrorReason: string;
   focusedUser: any;
   playedRecords: Array<any>;
@@ -85,6 +89,7 @@ export type totalCypherState = {
 // 기본값
 export const initialState: totalCypherState = {
   searchedPlayers: [],
+  searchingUser: false,
   searchUserErrorReason: "",
   focusedUser: "",
   playedRecords: [],
@@ -105,16 +110,31 @@ export default function totalCyphersReducer(
         currentUrl: action.payload.url,
       };
     }
+    case SEARCH_USER_NICKNAME_REQUEST: {
+      return {
+        ...state,
+        searchingUser: true,
+        searchedPlayers: [],
+      };
+    }
     case SEARCH_USER_NICKNAME_SUCCESS: {
       return {
         ...state,
+        searchingUser: false,
         searchedPlayers: action.payload.searchedPlayers,
       };
     }
     case SEARCH_USER_NICKNAME_FAILURE: {
       return {
         ...state,
+        searchingUser: false,
         searchedPlayers: action.payload,
+      };
+    }
+    case "SEARCHED_PLAYERS_RESET": {
+      return {
+        ...state,
+        searchedPlayers: [],
       };
     }
     case GET_USER_INFO_SUCCESS: {
@@ -155,6 +175,11 @@ export default function totalCyphersReducer(
             ? { ...data, matchDetail: action.payload.playedRecords }
             : data
         ),
+      };
+    }
+    case GET_GAME_DETAIL_FAILURE: {
+      return {
+        ...state,
       };
     }
     default:

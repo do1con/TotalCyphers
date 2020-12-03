@@ -70,8 +70,8 @@ const MainImageWrapper = styled.div`
   height: 150px;
   position: relative;
   @media (max-width: 500px) {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 `;
 
@@ -83,8 +83,8 @@ const GearBackground = styled.div`
   position: absolute;
   filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.5));
   @media (max-width: 500px) {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 `;
 
@@ -135,8 +135,8 @@ const GearDiv = styled.div`
     }
   }
   @media (max-width: 500px) {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 `;
 
