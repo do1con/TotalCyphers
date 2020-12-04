@@ -128,8 +128,10 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
             }}
           >
             <Popover content={info.date}>
-              <InfoCircleOutlined />
-              <span>&nbsp;{getDateDiffer()}</span>
+              <MatchDateSpan>
+                <InfoCircleOutlined />
+              </MatchDateSpan>
+              <MatchDateSpan>&nbsp;{getDateDiffer()}</MatchDateSpan>
             </Popover>
           </div>
           <div
@@ -151,26 +153,19 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                 margin: "10px",
               }}
             >
-              <img
+              <CharacterImage
                 src={`https://img-api.neople.co.kr/cy/characters/${info.playInfo.characterId}`}
                 alt="캐릭터"
               />
             </div>
             <div style={{ width: "100%", textAlign: "center" }}>
-              <span style={{ fontSize: "14px", fontWeight: "bold" }}>
+              <CharacterCharSpan>
                 {info.playInfo.characterName}
-              </span>
+              </CharacterCharSpan>
             </div>
           </div>
-          <div
-            style={{
-              overflow: "hidden",
-              margin: "10px",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            <img
+          <PositionImageWrapper>
+            <PositionImage
               src={
                 info.position.name === "탱커"
                   ? tanker
@@ -183,38 +178,33 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                   : "에러"
               }
               alt="포지션"
-              width="25"
             />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "80px",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
+          </PositionImageWrapper>
+          <KdaPresenterWrapper>
             <div style={{ textAlign: "center" }}>
               <span style={{ fontSize: "12px", color: "#6f6f6f" }}>
-                K / D / A
+                <KdaSpan>K / D / A</KdaSpan>
               </span>
             </div>
             <div style={{ textAlign: "center" }}>
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.killCount}
-              </span>{" "}
-              /{" "}
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.deathCount}
-              </span>{" "}
-              /{" "}
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.assistCount}
-              </span>
+              <KdaSpan>
+                <span style={{ fontWeight: "bold" }}>
+                  {info.playInfo.killCount}
+                </span>{" "}
+                /{" "}
+                <span style={{ fontWeight: "bold" }}>
+                  {info.playInfo.deathCount}
+                </span>{" "}
+                /{" "}
+                <span style={{ fontWeight: "bold" }}>
+                  {info.playInfo.assistCount}
+                </span>
+              </KdaSpan>
             </div>
-            <div style={{ textAlign: "center" }}>{kda()}</div>
-          </div>
+            <div style={{ textAlign: "center" }}>
+              <KdaSpan>{kda()}</KdaSpan>
+            </div>
+          </KdaPresenterWrapper>
           <PointPresenterWrapper>
             <span style={{ fontSize: "12px", color: "#6f6f6f" }}>공격량</span>
             <br />
@@ -390,5 +380,59 @@ const BackgroundWinSpan = styled.span`
   }
   @media (max-width: 529px) {
     font-size: 110px;
+  }
+`;
+
+const MatchDateSpan = styled.span`
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
+`;
+
+const CharacterImage = styled.img`
+  @media (max-width: 480px) {
+    width: 36px;
+  }
+`;
+
+const CharacterCharSpan = styled.span`
+  font-size: 14px;
+  font-weight: bold;
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
+`;
+
+const PositionImageWrapper = styled.div`
+  overflow: hidden;
+  margin: 10px;
+  position: relative;
+  z-index: 2;
+  @media (max-width: 480px) {
+    margin: 2px;
+  }
+`;
+
+const PositionImage = styled.img`
+  width: 25px;
+  @media (max-width: 480px) {
+    width: 20px;
+  }
+`;
+
+const KdaPresenterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  position: relative;
+  z-index: 2;
+  @media (max-width: 480px) {
+    width: 65px;
+  }
+`;
+
+const KdaSpan = styled.span`
+  @media (max-width: 480px) {
+    font-size: 10px;
   }
 `;
