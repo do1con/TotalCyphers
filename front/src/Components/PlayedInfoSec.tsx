@@ -373,33 +373,45 @@ const BackgroundWinSpan = styled.span`
   opacity: 0.5;
   display: block;
   overflow-y: hidden;
-  overflow-x: visible;
+  overflow-x: hidden;
   height: 101px;
   @media (min-width: 530px) and (max-width: 600px) {
     font-size: 130px;
   }
-  @media (max-width: 529px) {
+  @media (min-width: 460px) and (max-width: 529px) {
     font-size: 110px;
+  }
+  @media (max-width: 459px) {
+    font-size: 100px;
   }
 `;
 
 const MatchDateSpan = styled.span`
-  @media (max-width: 480px) {
+  @media (min-width: 410px) and (max-width: 480px) {
     font-size: 10px;
+  }
+  @media (max-width: 410px) {
+    font-size: 8px;
   }
 `;
 
 const CharacterImage = styled.img`
-  @media (max-width: 480px) {
+  @media (min-width: 410px) and (max-width: 480px) {
     width: 36px;
+  }
+  @media (max-width: 410px) {
+    width: 26px;
   }
 `;
 
 const CharacterCharSpan = styled.span`
   font-size: 14px;
   font-weight: bold;
-  @media (max-width: 480px) {
-    font-size: 12px;
+  @media (min-width: 410px) and (max-width: 480px) {
+    font-size: 10px;
+  }
+  @media (max-width: 410px) {
+    font-size: 8px;
   }
 `;
 
@@ -415,8 +427,11 @@ const PositionImageWrapper = styled.div`
 
 const PositionImage = styled.img`
   width: 25px;
-  @media (max-width: 480px) {
+  @media (min-width: 410px) and (max-width: 480px) {
     width: 20px;
+  }
+  @media (max-width: 480px) {
+    width: 15px;
   }
 `;
 

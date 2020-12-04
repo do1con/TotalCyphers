@@ -37,7 +37,6 @@ function Header(): JSX.Element {
           <div
             style={{
               marginLeft: "auto",
-              width: "300px",
               height: "32px",
             }}
           >

@@ -45,9 +45,16 @@ const BodyWrapper = styled.div`
     justify-content: center;
     flex-wrap: wrap;
   }
-  @media (max-width: 649px) {
+  @media (min-width: 480px) and (max-width: 649px) {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+    padding: 30px;
+  }
+  @media (max-width: 479px) {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px;
   }
 `;

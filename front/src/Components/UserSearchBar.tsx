@@ -80,7 +80,26 @@ function UserSearchBar(): JSX.Element {
     <Form>
       <Form.Item>
         <Search
-          style={{ width: "300px", margin: "0 auto" }}
+          // style={{ width: "250px", margin: "0 auto" }}
+          style={(() => {
+            const browserWidth = document.body.offsetWidth;
+            if (browserWidth < 320) {
+              return {
+                width: "160px",
+                margin: "0 auto",
+              };
+            }
+            if (browserWidth < 420) {
+              return {
+                width: "200px",
+                margin: "0 auto",
+              };
+            }
+            return {
+              width: "250px",
+              margin: "0 auto",
+            };
+          })()}
           placeholder="닉네임"
           enterButton
           onSearch={onSubmitSearchNickname}
