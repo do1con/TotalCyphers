@@ -40,8 +40,13 @@ const BodyWrapper = styled.div`
   display: flex;
   padding: 50px;
   justify-content: space-between;
-  @media (max-width: 767px) {
+  @media (min-width: 650px) and (max-width: 767px) {
     width: 80%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 649px) {
+    width: 100%;
     justify-content: center;
     flex-wrap: wrap;
   }

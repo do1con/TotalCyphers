@@ -292,5 +292,6 @@ const UserInfoWrapper = styled.div`
   width: 27%;
   @media (max-width: 767px) {
     width: 100%;
+    margin-bottom: 10px;
   }
 `;

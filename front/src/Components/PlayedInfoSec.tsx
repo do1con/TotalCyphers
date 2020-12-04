@@ -139,21 +139,9 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
               zIndex: 1,
             }}
           >
-            <span
-              style={{
-                fontWeight: "bolder",
-                fontSize: "155px",
-                lineHeight: "0.5",
-                color: "#ffffff",
-                opacity: "0.5",
-                display: "block",
-                overflowY: "hidden",
-                overflowX: "visible",
-                height: "101px",
-              }}
-            >
+            <BackgroundWinSpan>
               {info.playInfo.result.toUpperCase()}
-            </span>
+            </BackgroundWinSpan>
           </div>
           <div style={{ position: "relative", zIndex: 2 }}>
             <div
@@ -227,14 +215,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
             </div>
             <div style={{ textAlign: "center" }}>{kda()}</div>
           </div>
-          <div
-            style={{
-              width: "80px",
-              position: "relative",
-              zIndex: 2,
-              textAlign: "center",
-            }}
-          >
+          <PointPresenterWrapper>
             <span style={{ fontSize: "12px", color: "#6f6f6f" }}>공격량</span>
             <br />
             <span style={{ color: "#00860a", fontWeight: "bold" }}>
@@ -246,7 +227,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
             <span style={{ color: "#690000", fontWeight: "bold" }}>
               {info.playInfo.damagePoint}
             </span>
-          </div>
+          </PointPresenterWrapper>
           <div style={{ margin: "10px", position: "relative", zIndex: 3 }}>
             {info.position.attribute.map(
               (
@@ -274,7 +255,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                         borderRadius: "25% 25%",
                       }}
                     />
-                    <span style={{ fontSize: "12px" }}>&nbsp;{data.name}</span>
+                    <CharacteristicSpan>&nbsp;{data.name}</CharacteristicSpan>
                   </div>
                 </div>
               )
@@ -288,7 +269,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
               right: "0",
             }}
           >
-            <img
+            <MapImage
               src={
                 info.map.mapId === "101"
                   ? map_riverford
@@ -321,17 +302,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                 }30%, rgba(255,255,255,0))`,
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50px",
-                  right: "0",
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                  width: "100px",
-                  height: "30px",
-                  textAlign: "center",
-                }}
-              >
+              <MapPresenterWrapper>
                 <span
                   style={{
                     fontSize: "13px",
@@ -344,7 +315,7 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                     ? "그랑플람"
                     : info.map.name}
                 </span>
-              </div>
+              </MapPresenterWrapper>
             </div>
           </div>
         </PlayedInfoWrapper>
@@ -364,4 +335,60 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   display: flex;
   align-items: center;
   position: relative;
+  height: 101px;
+`;
+
+const PointPresenterWrapper = styled.div`
+  width: 80px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const MapPresenterWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const MapImage = styled.img`
+  height: 101px;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const CharacteristicSpan = styled.span`
+  font-size: 12px;
+  @media (max-width: 710px) {
+    display: none;
+  }
+`;
+
+const BackgroundWinSpan = styled.span`
+  font-weight: bolder;
+  font-size: 155px;
+  line-height: 0.5;
+  color: #ffffff;
+  opacity: 0.5;
+  display: block;
+  overflow-y: hidden;
+  overflow-x: visible;
+  height: 101px;
+  @media (min-width: 530px) and (max-width: 600px) {
+    font-size: 130px;
+  }
+  @media (max-width: 529px) {
+    font-size: 110px;
+  }
 `;
