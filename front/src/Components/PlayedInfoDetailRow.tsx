@@ -1,5 +1,5 @@
-import React from "react";
-import { Row, Col, Popover } from "antd";
+import React, { useState, useLayoutEffect } from "react";
+import { Row, Col, Popover, Button, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentUrl } from "../modules/totalCyphers";
@@ -39,6 +39,60 @@ function PlayedInfoDetailRow(infoData: {
     }
     return String(value.toFixed(2)) + " 평점";
   };
+  // 커스텀 훅
+  const useWindowSize = () => {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener("resize", updateSize);
+      updateSize();
+      return () => window.removeEventListener("resize", updateSize);
+    }, []);
+    return size;
+  };
+  const [width] = useWindowSize();
+
+  // 아이템 보기 클릭시 모달
+  function itemInfo(itemdatas: Array<ItemData>) {
+    Modal.info({
+      title: "이미지를 클릭하면 아이템정보를 볼 수 있습니다.",
+      content: (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          {itemdatas.map((itemData: ItemData, itemIndex: number) => {
+            return (
+              <Popover
+                title={itemData.itemName}
+                content={itemData.slotName}
+                key={itemIndex}
+              >
+                <div
+                  style={{
+                    borderRadius: "20% 20%",
+                    overflow: "hidden",
+                    margin: "1px",
+                    textAlign: "center",
+                  }}
+                >
+                  <img
+                    src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
+                    width="30"
+                    alt="아이템"
+                  />
+                </div>
+              </Popover>
+            );
+          })}
+        </div>
+      ),
+    });
+  }
   return (
     <Row
       style={{
@@ -215,37 +269,46 @@ function PlayedInfoDetailRow(infoData: {
         </div>
       </Col>
       <Col span="10" style={{ display: "flex", alignItems: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}
-        >
-          {data.items.map((itemData: ItemData, itemIndex: number) => {
-            return (
-              <Popover
-                title={itemData.itemName}
-                content={itemData.slotName}
-                key={itemIndex}
-              >
-                <div
-                  style={{
-                    borderRadius: "20% 20%",
-                    overflow: "hidden",
-                    margin: "1px",
-                    textAlign: "center",
-                  }}
+        {width <= 767 ? (
+          <Button
+            style={{ margin: "0 auto" }}
+            onClick={() => itemInfo(data.items)}
+          >
+            보기
+          </Button>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+            }}
+          >
+            {data.items.map((itemData: ItemData, itemIndex: number) => {
+              return (
+                <Popover
+                  title={itemData.itemName}
+                  content={itemData.slotName}
+                  key={itemIndex}
                 >
-                  <img
-                    src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
-                    width="27"
-                    alt="아이템"
-                  />
-                </div>
-              </Popover>
-            );
-          })}
-        </div>
+                  <div
+                    style={{
+                      borderRadius: "20% 20%",
+                      overflow: "hidden",
+                      margin: "1px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <img
+                      src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
+                      width="27"
+                      alt="아이템"
+                    />
+                  </div>
+                </Popover>
+              );
+            })}
+          </div>
+        )}
       </Col>
     </Row>
   );
