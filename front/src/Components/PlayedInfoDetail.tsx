@@ -118,17 +118,17 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
           <div>
             <PlayedInfoWrapper win={matchDetail.playInfo.result}>
               <Row>
-                <Col span="4">
-                  <h3 style={{ textAlign: "center" }}>승리팀</h3>
+                <Col xs={10} md={4}>
+                  <ColTitleH3>승리팀</ColTitleH3>
                 </Col>
-                <Col span="4">
-                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                <Col xs={6} md={4}>
+                  <ColTitleH4>K / D / A</ColTitleH4>
                 </Col>
-                <Col span="6">
-                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                <Col xs={8} md={6}>
+                  <ColTitleH4>상세 기록</ColTitleH4>
                 </Col>
-                <Col span="10">
-                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                <Col xs={0} md={10}>
+                  <ColTitleH4>아이템</ColTitleH4>
                 </Col>
               </Row>
               {matchDetail.matchDetail.players &&
@@ -148,17 +148,17 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
             </PlayedInfoWrapper>
             <PlayedInfoWrapper win={!matchDetail.playInfo.result}>
               <Row>
-                <Col span="4">
-                  <h3 style={{ textAlign: "center" }}>패배팀</h3>
+                <Col xs={10} md={4}>
+                  <ColTitleH3>패배팀</ColTitleH3>
                 </Col>
-                <Col span="4">
-                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                <Col xs={6} md={4}>
+                  <ColTitleH4>K / D / A</ColTitleH4>
                 </Col>
-                <Col span="6">
-                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                <Col xs={8} md={6}>
+                  <ColTitleH4>상세 기록</ColTitleH4>
                 </Col>
-                <Col span="10">
-                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                <Col xs={0} md={10}>
+                  <ColTitleH4>아이템</ColTitleH4>
                 </Col>
               </Row>
               {matchDetail.matchDetail.players &&
@@ -211,4 +211,15 @@ const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
   background-color ${(props) => (props.win ? "#91d5ff" : "#ffa39e")};
   text-align: center;
   cursor: pointer
+`;
+const ColTitleH3 = styled.h3`
+  text-align: center;
+  @media (max-width: 530px) {
+    font-size: 10px;
+  }
+`;
+const ColTitleH4 = styled.h4`
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
 `;
