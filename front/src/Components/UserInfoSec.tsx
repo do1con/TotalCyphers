@@ -24,9 +24,6 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
   useEffect(() => {
     dispatch(getUserByUserId(userId));
   }, [parameter]);
-  useEffect(() => {
-    console.log("유저인포", focusedUser);
-  });
   const checkNormalGameRecordsExist = useCallback(
     (recordsData: Array<WinRecords>) => {
       const result = recordsData.find((datas: WinRecords) => {

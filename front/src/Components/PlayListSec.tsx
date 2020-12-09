@@ -18,6 +18,9 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
   const playedList = useSelector(
     (state: RootState) => state.totalCyphers.playedRecords
   );
+  const { gettingUserPlaylist } = useSelector(
+    (state: RootState) => state.totalCyphers
+  );
   const [playListType, setPlayListType] = useState("normal");
   const [showLimit, setShowLimit] = useState(10);
   const [isLastRecord, setIsLastRecord] = useState(false);
@@ -44,43 +47,66 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
       setIsLastRecord(true);
     }
   }, [showLimit, setShowLimit, setIsLastRecord, playedList]);
-  if (playedList) {
-    return (
-      <PlayedListWrapper>
-        <Card
-          title={
-            <span className="ㅇㅇ">
-              최근 경기{" "}
-              <Popover
-                content={"오늘부터 90일 전까지 최대 100개의 전적이 조회됩니다."}
-              >
-                <InfoCircleOutlined />
-              </Popover>
-            </span>
-          }
-        >
-          <Tabs defaultActiveKey="normal" onChange={onChangeTab}>
-            <TabPane tab="일반전" key="normal"></TabPane>
-            <TabPane tab="공식전" key="rating"></TabPane>
-          </Tabs>
-          {playedList.map((data, index) => {
+  return (
+    <PlayedListWrapper>
+      <Card
+        title={
+          <span className="ㅇㅇ">
+            최근 경기{" "}
+            <Popover
+              content={"오늘부터 90일 전까지 최대 100개의 전적이 조회됩니다."}
+            >
+              <InfoCircleOutlined />
+            </Popover>
+          </span>
+        }
+      >
+        <Tabs defaultActiveKey="normal" onChange={onChangeTab}>
+          <TabPane tab="일반전" key="normal"></TabPane>
+          <TabPane tab="공식전" key="rating"></TabPane>
+        </Tabs>
+        {gettingUserPlaylist ? (
+          <>
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+          </>
+        ) : (
+          playedList.map((data, index) => {
             if (index <= showLimit) {
-              return <PlayedInfoSec data={data} key={index} />;
+              return (
+                <PlayedInfoSec
+                  data={data}
+                  key={index}
+                  loading={gettingUserPlaylist}
+                />
+              );
             }
-          })}
-          {!isLastRecord ? (
-            <div style={{ width: "100%", textAlign: "center" }}>
-              <Button onClick={onClickShowMore}>더 보기</Button>
-            </div>
-          ) : (
-            "조회할 수 있는 마지막 경기입니다."
-          )}
-        </Card>
-      </PlayedListWrapper>
-    );
-  } else {
-    return <div>로딩 중...</div>;
-  }
+          })
+        )}
+        {playedList.length <= 0 && (
+          <div style={{ padding: "10px" }}>
+            최근 90일간 플레이하지 않았거나 전적갱신이 되지 않았습니다.
+          </div>
+        )}
+        {!isLastRecord ? (
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <Button onClick={onClickShowMore}>더 보기</Button>
+          </div>
+        ) : (
+          "조회할 수 있는 마지막 경기입니다."
+        )}
+      </Card>
+    </PlayedListWrapper>
+  );
 }
 
 export default PlayListSec;

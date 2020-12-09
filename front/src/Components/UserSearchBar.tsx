@@ -23,6 +23,7 @@ function UserSearchBar(): JSX.Element {
   const [typedOneChar, setTypedOneChar] = useState(false);
   const [activePlayer, setActivePlayer] = useState(0);
   const [typedFullChar, setTypedFullChar] = useState("");
+  const [focusing, setFocusing] = useState(false);
 
   const onSubmitSearchNickname = useCallback(
     (e: string) => {
@@ -105,39 +106,47 @@ function UserSearchBar(): JSX.Element {
           onSearch={onSubmitSearchNickname}
           onChange={onChangeSearchBar}
           onKeyUp={onKeyUpSearchBar}
+          onFocus={() => setFocusing(true)}
+          onBlur={() => {
+            setTimeout(() => {
+              setFocusing(false);
+            }, 100);
+          }}
           value={typedFullChar}
         />
-        <SearchedList>
-          {searchingUser && (
-            <>
-              <LoadingSkeleton />
-              <LoadingSkeleton />
-              <LoadingSkeleton />
-              <LoadingSkeleton />
-              <LoadingSkeleton />
-            </>
-          )}
-          {typedOneChar && (
-            <span style={{ display: "block", padding: "5px" }}>
-              최소 두 글자가 필요합니다.
-            </span>
-          )}
-          {searchedPlayers.length > 0 &&
-            searchedPlayers.map((data, index) => {
-              if (index < 6) {
-                return (
-                  <Link to={`/userInfo/${data.playerId}`} key={index}>
-                    <PlayerListCard focus={activePlayer === index}>
-                      <span>{data.nickname}</span>
-                      <span style={{ float: "right", color: "#9f9f9f" }}>
-                        {data.grade} 급
-                      </span>
-                    </PlayerListCard>
-                  </Link>
-                );
-              }
-            })}
-        </SearchedList>
+        {focusing && (
+          <SearchedList>
+            {searchingUser && (
+              <>
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+              </>
+            )}
+            {typedOneChar && (
+              <span style={{ display: "block", padding: "5px" }}>
+                최소 두 글자가 필요합니다.
+              </span>
+            )}
+            {searchedPlayers.length > 0 &&
+              searchedPlayers.map((data, index) => {
+                if (index < 6) {
+                  return (
+                    <Link to={`/userInfo/${data.playerId}`} key={index}>
+                      <PlayerListCard focus={activePlayer === index}>
+                        <span>{data.nickname}</span>
+                        <span style={{ float: "right", color: "#9f9f9f" }}>
+                          {data.grade} 급
+                        </span>
+                      </PlayerListCard>
+                    </Link>
+                  );
+                }
+              })}
+          </SearchedList>
+        )}
       </Form.Item>
     </Form>
   );

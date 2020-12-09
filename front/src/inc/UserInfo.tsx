@@ -18,12 +18,8 @@ function UserInfo(): JSX.Element {
     dispatch(setCurrentUrl(window.location.pathname));
   }, []);
   useEffect(() => {
-    // history.push(currentUrl);
     dispatch(setCurrentUrl(window.location.pathname));
   }, [currentUrl]);
-  // useEffect(() => {
-  //   console.log("오긴하니??", currentUrl);
-  // });
   return (
     <BodyWrapper>
       <UserInfoSec parameter={parameter.userId} />

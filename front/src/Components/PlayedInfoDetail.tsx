@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Col, Row } from "antd";
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import { DownOutlined, UpOutlined, LoadingOutlined } from "@ant-design/icons";
 import { RootState } from "../modules/index";
 import { getGameDetail } from "../modules/totalCyphers";
 import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
@@ -74,7 +74,10 @@ export type PlayerInfo = {
   };
 };
 
-function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
+function PlayedInfoDefail(data: {
+  matchId: string;
+  loading: boolean;
+}): JSX.Element {
   const matchId = data.matchId;
   const dispatch = useDispatch();
   const [showDetail, setShowDetail] = useState(false);
@@ -182,16 +185,18 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
     );
   } else {
     return (
-      <PlayedInfoDetailBtn
-        win={matchDetail.playInfo.result === "win"}
-        onClick={onClickShowBtn}
-      >
-        {showDetail ? (
-          <UpOutlined style={{ margin: "0 auto" }} />
-        ) : (
-          <DownOutlined style={{ margin: "0 auto" }} />
-        )}
-      </PlayedInfoDetailBtn>
+      <div>
+        <PlayedInfoDetailBtn
+          win={matchDetail.playInfo.result === "win"}
+          onClick={onClickShowBtn}
+        >
+          {showDetail ? (
+            <LoadingOutlined style={{ margin: "0 auto" }} />
+          ) : (
+            <DownOutlined style={{ margin: "0 auto" }} />
+          )}
+        </PlayedInfoDetailBtn>
+      </div>
     );
   }
 }
@@ -205,7 +210,7 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   position: relative;
   padding: 10px;
 `;
-const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
+export const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
   width: 100%;
   height: 22px;
   background-color ${(props) => (props.win ? "#91d5ff" : "#ffa39e")};
