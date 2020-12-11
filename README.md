@@ -18,3 +18,9 @@ kss7547@gmail.com혹은 issues를 통해 저에게 메시지를 보낼 수 있�
 ## preview
 
 ![total-cyphers_preview](/front/src/static/media/total-cyphers.gif)
+
+## 배포
+
+[Total Cyphers](https://total-cyphers.herokuapp.com/)
+
+- Heroku
