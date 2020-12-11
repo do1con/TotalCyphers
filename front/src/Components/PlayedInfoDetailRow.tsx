@@ -1,7 +1,8 @@
-import React from "react";
-import { Row, Col, Popover } from "antd";
+import React, { useState, useLayoutEffect } from "react";
+import { Row, Col, Popover, Button, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 import { setCurrentUrl } from "../modules/totalCyphers";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
@@ -37,8 +38,62 @@ function PlayedInfoDetailRow(infoData: {
     if (value <= 0) {
       return "0 평점";
     }
-    return String(value.toFixed(2)) + " 평점";
+    return String(value.toFixed(2));
   };
+  // 커스텀 훅
+  const useWindowSize = () => {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener("resize", updateSize);
+      updateSize();
+      return () => window.removeEventListener("resize", updateSize);
+    }, []);
+    return size;
+  };
+  const [width] = useWindowSize();
+
+  // 아이템 보기 클릭시 모달
+  function itemInfo(itemdatas: Array<ItemData>) {
+    Modal.info({
+      title: "이미지를 클릭하면 아이템정보를 볼 수 있습니다.",
+      content: (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          {itemdatas.map((itemData: ItemData, itemIndex: number) => {
+            return (
+              <Popover
+                title={itemData.itemName}
+                content={itemData.slotName}
+                key={itemIndex}
+              >
+                <div
+                  style={{
+                    borderRadius: "20% 20%",
+                    overflow: "hidden",
+                    margin: "1px",
+                    textAlign: "center",
+                  }}
+                >
+                  <img
+                    src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
+                    width="30"
+                    alt="아이템"
+                  />
+                </div>
+              </Popover>
+            );
+          })}
+        </div>
+      ),
+    });
+  }
   return (
     <Row
       style={{
@@ -48,7 +103,8 @@ function PlayedInfoDetailRow(infoData: {
       }}
     >
       <Col
-        span="4"
+        xs={8}
+        md={4}
         style={{
           display: "flex",
           alignItems: "center",
@@ -106,149 +162,178 @@ function PlayedInfoDetailRow(infoData: {
                 infoData.setShowState(false);
               }}
             >
-              <span
-                style={{
-                  textOverflow: "ellipsis",
-                  fontSize: "12px",
-                  width: "63px",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  display: "block",
-                  color: "#000000d9",
-                }}
-              >
-                {data.nickname}
-              </span>
+              <UserNicknameSpan>{data.nickname}</UserNicknameSpan>
             </Link>
           </div>
         </div>
       </Col>
       <Col
-        span="4"
+        xs={6}
+        md={4}
         style={{
           display: "flex",
           placeItems: "center",
           alignItems: "center",
           justifyItems: "center",
+          textAlign: "center",
         }}
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: "12px",
             justifyItems: "center",
-            width: "93px",
+            margin: "0 auto",
           }}
         >
           <div style={{ textAlign: "center" }}>
-            <span style={{ fontWeight: "bold" }}>
-              {data.playInfo.killCount}
-            </span>{" "}
-            /{" "}
-            <span style={{ fontWeight: "bold" }}>
-              {data.playInfo.deathCount}
-            </span>{" "}
-            /{" "}
-            <span style={{ fontWeight: "bold" }}>
-              {data.playInfo.assistCount}
-            </span>
+            <KdaSpan>{data.playInfo.killCount}</KdaSpan>/
+            <KdaSpan>{data.playInfo.deathCount}</KdaSpan>/
+            <KdaSpan>{data.playInfo.assistCount}</KdaSpan>
           </div>
-          <div style={{ textAlign: "center" }}>{kda(data)}</div>
+          <div style={{ textAlign: "center" }}>
+            <VerdictSpan>{kda(data)}</VerdictSpan>
+          </div>
         </div>
       </Col>
-      <Col span="6">
+      <Col xs={10} md={6}>
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-around",
+            width: "100%",
           }}
         >
-          <div style={{ width: "55px" }}>
-            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>공격량</span>
+          <div>
+            <span style={{ color: "#6f6f6f" }}>
+              <FontSizeSpan>공격량</FontSizeSpan>
+            </span>
             <br />
             <span
               style={{
                 color: "#00860a",
                 fontWeight: "bold",
                 textAlign: "center",
-                fontSize: "12px",
               }}
             >
-              {data.playInfo.attackPoint}
+              <FontSizeSpan>{data.playInfo.attackPoint}</FontSizeSpan>
             </span>
             <br />
-            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>피해량</span>
+            <span style={{ color: "#6f6f6f" }}>
+              <FontSizeSpan>피해량</FontSizeSpan>
+            </span>
             <br />
             <span
               style={{
                 color: "#690000",
                 fontWeight: "bold",
-                fontSize: "12px",
               }}
             >
-              {data.playInfo.damagePoint}
+              <FontSizeSpan>{data.playInfo.damagePoint}</FontSizeSpan>
             </span>
           </div>
           <div>
-            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>
-              전투 참여
+            <span style={{ color: "#6f6f6f" }}>
+              <FontSizeSpan>전투 참여</FontSizeSpan>
             </span>
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "12px" }}>
-              {data.playInfo.battlePoint}
+            <span style={{ fontWeight: "bold" }}>
+              <FontSizeSpan>{data.playInfo.battlePoint}</FontSizeSpan>
             </span>
             <br />
             <span
               style={{
-                fontSize: "12px",
                 color: "#6f6f6f",
               }}
             >
-              시야 확보
+              <FontSizeSpan>시야 확보</FontSizeSpan>
             </span>
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "12px" }}>
-              {data.playInfo.sightPoint}
+            <span style={{ fontWeight: "bold" }}>
+              <FontSizeSpan>{data.playInfo.sightPoint}</FontSizeSpan>
             </span>
           </div>
         </div>
       </Col>
-      <Col span="10" style={{ display: "flex", alignItems: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}
-        >
-          {data.items.map((itemData: ItemData, itemIndex: number) => {
-            return (
-              <Popover
-                title={itemData.itemName}
-                content={itemData.slotName}
-                key={itemIndex}
-              >
-                <div
-                  style={{
-                    borderRadius: "20% 20%",
-                    overflow: "hidden",
-                    margin: "1px",
-                    textAlign: "center",
-                  }}
+      <Col xs={24} md={10} style={{ display: "flex", alignItems: "center" }}>
+        {width <= 767 ? (
+          <Button
+            style={{ margin: "8px auto" }}
+            size="small"
+            onClick={() => itemInfo(data.items)}
+          >
+            아이템 보기
+          </Button>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+            }}
+          >
+            {data.items.map((itemData: ItemData, itemIndex: number) => {
+              return (
+                <Popover
+                  title={itemData.itemName}
+                  content={itemData.slotName}
+                  key={itemIndex}
                 >
-                  <img
-                    src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
-                    width="27"
-                    alt="아이템"
-                  />
-                </div>
-              </Popover>
-            );
-          })}
-        </div>
+                  <div
+                    style={{
+                      borderRadius: "20% 20%",
+                      overflow: "hidden",
+                      margin: "1px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <img
+                      src={`https://img-api.neople.co.kr/cy/items/${itemData.itemId}`}
+                      width="27"
+                      alt="아이템"
+                    />
+                  </div>
+                </Popover>
+              );
+            })}
+          </div>
+        )}
       </Col>
     </Row>
   );
 }
 
 export default PlayedInfoDetailRow;
+
+const UserNicknameSpan = styled.span`
+  text-overflow: ellipsis;
+  font-size: 12px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+  color: #171717;
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
+`;
+
+const KdaSpan = styled.span`
+  font-weight: bold;
+  font-size: 12px;
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
+`;
+
+const VerdictSpan = styled.span`
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
+`;
+
+const FontSizeSpan = styled.span`
+  font-size: 12px;
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
+`;

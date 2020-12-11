@@ -18,12 +18,8 @@ function UserInfo(): JSX.Element {
     dispatch(setCurrentUrl(window.location.pathname));
   }, []);
   useEffect(() => {
-    // history.push(currentUrl);
     dispatch(setCurrentUrl(window.location.pathname));
   }, [currentUrl]);
-  // useEffect(() => {
-  //   console.log("오긴하니??", currentUrl);
-  // });
   return (
     <BodyWrapper>
       <UserInfoSec parameter={parameter.userId} />
@@ -40,4 +36,21 @@ const BodyWrapper = styled.div`
   display: flex;
   padding: 50px;
   justify-content: space-between;
+  @media (min-width: 650px) and (max-width: 767px) {
+    width: 80%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  @media (min-width: 480px) and (max-width: 649px) {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 30px;
+  }
+  @media (max-width: 479px) {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
 `;

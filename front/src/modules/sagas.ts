@@ -47,7 +47,6 @@ function* getUserById(data: string) {
   try {
     const payloadData = {
       method: "post",
-      url: `http://localhost:5000/proxy/totalcyphers`,
       data: {
         reqMethod: "getUserInfoById",
         payload: {
@@ -76,7 +75,6 @@ function* searchByNickname(data: string) {
   try {
     const payloadData = {
       method: "post",
-      url: `http://localhost:5000/proxy/totalcyphers`,
       data: {
         reqMethod: "getUserByNickname",
         payload: {
@@ -115,7 +113,6 @@ function* getPlayListByUserId(
   try {
     const payloadData = {
       method: "post",
-      url: `http://localhost:5000/proxy/totalcyphers`,
       data: {
         reqMethod: "getUserPlayList",
         payload: {
@@ -150,7 +147,6 @@ function* getGameDetailByMatchId(matchId: string) {
   try {
     const payloadData = {
       method: "post",
-      url: `http://localhost:5000/proxy/totalcyphers`,
       data: {
         reqMethod: "getGameDetail",
         payload: {
@@ -179,7 +175,10 @@ function* getGameDetailByMatchId(matchId: string) {
 
 // API 요청 통일 됨
 function callAPI(payload: any) {
-  return axios.post("http://localhost:5000/proxy/totalcyphers/", payload);
+  return axios.post(
+    "https://total-cyphers.herokuapp.com/proxy/totalcyphers",
+    payload
+  );
 }
 
 export default function* totalCyphersSaga() {

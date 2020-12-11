@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Card, Tabs, Button, Popover } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules/index";
 import { getUserPlayList } from "../modules/totalCyphers";
@@ -16,6 +17,9 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
   const dispatch = useDispatch();
   const playedList = useSelector(
     (state: RootState) => state.totalCyphers.playedRecords
+  );
+  const { gettingUserPlaylist } = useSelector(
+    (state: RootState) => state.totalCyphers
   );
   const [playListType, setPlayListType] = useState("normal");
   const [showLimit, setShowLimit] = useState(10);
@@ -43,10 +47,9 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
       setIsLastRecord(true);
     }
   }, [showLimit, setShowLimit, setIsLastRecord, playedList]);
-  if (playedList) {
-    return (
+  return (
+    <PlayedListWrapper>
       <Card
-        style={{ width: "70%" }}
         title={
           <span className="ㅇㅇ">
             최근 경기{" "}
@@ -62,11 +65,38 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
           <TabPane tab="일반전" key="normal"></TabPane>
           <TabPane tab="공식전" key="rating"></TabPane>
         </Tabs>
-        {playedList.map((data, index) => {
-          if (index <= showLimit) {
-            return <PlayedInfoSec data={data} key={index} />;
-          }
-        })}
+        {gettingUserPlaylist ? (
+          <>
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+            <PlayedInfoSec loading={gettingUserPlaylist} />
+          </>
+        ) : (
+          playedList.map((data, index) => {
+            if (index <= showLimit) {
+              return (
+                <PlayedInfoSec
+                  data={data}
+                  key={index}
+                  loading={gettingUserPlaylist}
+                />
+              );
+            }
+          })
+        )}
+        {playedList.length <= 0 && (
+          <div style={{ padding: "10px" }}>
+            최근 90일간 플레이하지 않았거나 전적갱신이 되지 않았습니다.
+          </div>
+        )}
         {!isLastRecord ? (
           <div style={{ width: "100%", textAlign: "center" }}>
             <Button onClick={onClickShowMore}>더 보기</Button>
@@ -75,10 +105,15 @@ function PlayListSec(parameter: { parameter: string }): JSX.Element {
           "조회할 수 있는 마지막 경기입니다."
         )}
       </Card>
-    );
-  } else {
-    return <div>로딩 중...</div>;
-  }
+    </PlayedListWrapper>
+  );
 }
 
 export default PlayListSec;
+
+const PlayedListWrapper = styled.div`
+  width: 70%;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+`;

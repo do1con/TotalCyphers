@@ -37,7 +37,6 @@ function Header(): JSX.Element {
           <div
             style={{
               marginLeft: "auto",
-              width: "300px",
               height: "32px",
             }}
           >
@@ -68,6 +67,12 @@ const Title = styled.h1`
   color: #1f1f1f;
   margin-top: 0;
   margin-bottom: 0;
+  @media (min-width: 550px) and (max-width: 768px) {
+    font-size: 16px;
+  }
+  @media (max-width: 549px) {
+    display: none;
+  }
 `;
 
 export default Header;

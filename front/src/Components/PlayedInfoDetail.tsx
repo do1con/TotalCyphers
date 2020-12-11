@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Col, Row } from "antd";
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import { DownOutlined, UpOutlined, LoadingOutlined } from "@ant-design/icons";
 import { RootState } from "../modules/index";
 import { getGameDetail } from "../modules/totalCyphers";
 import PlayedInfoDetailRow from "./PlayedInfoDetailRow";
@@ -74,7 +74,10 @@ export type PlayerInfo = {
   };
 };
 
-function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
+function PlayedInfoDefail(data: {
+  matchId: string;
+  loading: boolean;
+}): JSX.Element {
   const matchId = data.matchId;
   const dispatch = useDispatch();
   const [showDetail, setShowDetail] = useState(false);
@@ -118,17 +121,17 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
           <div>
             <PlayedInfoWrapper win={matchDetail.playInfo.result}>
               <Row>
-                <Col span="4">
-                  <h3 style={{ textAlign: "center" }}>승리팀</h3>
+                <Col xs={10} md={4}>
+                  <ColTitleH3>승리팀</ColTitleH3>
                 </Col>
-                <Col span="4">
-                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                <Col xs={6} md={4}>
+                  <ColTitleH4>K / D / A</ColTitleH4>
                 </Col>
-                <Col span="6">
-                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                <Col xs={8} md={6}>
+                  <ColTitleH4>상세 기록</ColTitleH4>
                 </Col>
-                <Col span="10">
-                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                <Col xs={0} md={10}>
+                  <ColTitleH4>아이템</ColTitleH4>
                 </Col>
               </Row>
               {matchDetail.matchDetail.players &&
@@ -148,17 +151,17 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
             </PlayedInfoWrapper>
             <PlayedInfoWrapper win={!matchDetail.playInfo.result}>
               <Row>
-                <Col span="4">
-                  <h3 style={{ textAlign: "center" }}>패배팀</h3>
+                <Col xs={10} md={4}>
+                  <ColTitleH3>패배팀</ColTitleH3>
                 </Col>
-                <Col span="4">
-                  <h4 style={{ textAlign: "center" }}>K / D / A</h4>
+                <Col xs={6} md={4}>
+                  <ColTitleH4>K / D / A</ColTitleH4>
                 </Col>
-                <Col span="6">
-                  <h4 style={{ textAlign: "center" }}>상세 기록</h4>
+                <Col xs={8} md={6}>
+                  <ColTitleH4>상세 기록</ColTitleH4>
                 </Col>
-                <Col span="10">
-                  <h4 style={{ textAlign: "center" }}>아이템</h4>
+                <Col xs={0} md={10}>
+                  <ColTitleH4>아이템</ColTitleH4>
                 </Col>
               </Row>
               {matchDetail.matchDetail.players &&
@@ -182,16 +185,18 @@ function PlayedInfoDefail(data: { matchId: string }): JSX.Element {
     );
   } else {
     return (
-      <PlayedInfoDetailBtn
-        win={matchDetail.playInfo.result === "win"}
-        onClick={onClickShowBtn}
-      >
-        {showDetail ? (
-          <UpOutlined style={{ margin: "0 auto" }} />
-        ) : (
-          <DownOutlined style={{ margin: "0 auto" }} />
-        )}
-      </PlayedInfoDetailBtn>
+      <div>
+        <PlayedInfoDetailBtn
+          win={matchDetail.playInfo.result === "win"}
+          onClick={onClickShowBtn}
+        >
+          {showDetail ? (
+            <LoadingOutlined style={{ margin: "0 auto" }} />
+          ) : (
+            <DownOutlined style={{ margin: "0 auto" }} />
+          )}
+        </PlayedInfoDetailBtn>
+      </div>
     );
   }
 }
@@ -205,10 +210,21 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   position: relative;
   padding: 10px;
 `;
-const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
+export const PlayedInfoDetailBtn = styled.div<{ win: boolean }>`
   width: 100%;
   height: 22px;
   background-color ${(props) => (props.win ? "#91d5ff" : "#ffa39e")};
   text-align: center;
   cursor: pointer
+`;
+const ColTitleH3 = styled.h3`
+  text-align: center;
+  @media (max-width: 530px) {
+    font-size: 10px;
+  }
+`;
+const ColTitleH4 = styled.h4`
+  @media (max-width: 530px) {
+    font-size: 8px;
+  }
 `;

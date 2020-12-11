@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { Popover } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Popover, Skeleton } from "antd";
+import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import tanker from "./../static/media/tanker.png";
 import suppoter from "./../static/media/supporter.png";
 import geun_dealer from "./../static/media/geun_dealer.png";
@@ -12,7 +12,7 @@ import map_eindhoven from "./../static/media/map_eindhoven.png";
 import map_grandflam from "./../static/media/map_grandflam.png";
 import map_metropolis from "./../static/media/map_metropolis.png";
 import map_springfield from "./../static/media/map_springfield.png";
-import PlayedInfoDefail from "./PlayedInfoDetail";
+import PlayedInfoDefail, { PlayedInfoDetailBtn } from "./PlayedInfoDetail";
 
 type GameData = {
   date: string;
@@ -68,121 +68,152 @@ type GameData = {
   };
 };
 
-function PlayedInfoSec(data: { data: GameData }): JSX.Element {
-  const info: GameData = data.data;
-  const kda = (): string => {
-    const value =
-      (info.playInfo.killCount + info.playInfo.assistCount) /
-      info.playInfo.deathCount;
+function PlayedInfoSec(data: {
+  data?: GameData;
+  loading: boolean;
+}): JSX.Element {
+  const info: GameData | boolean = data.data ? data.data : false;
+  const loading = data.loading;
+  const kda = () => {
+    if (info) {
+      const value =
+        (info.playInfo.killCount + info.playInfo.assistCount) /
+        info.playInfo.deathCount;
 
-    if (value === Infinity) {
-      return "Perfect";
+      if (value === Infinity) {
+        return "Perfect";
+      }
+      if (value <= 0) {
+        return "0 평점";
+      }
+      return String(value.toFixed(2)) + " 평점";
     }
-    if (value <= 0) {
-      return "0 평점";
-    }
-    return String(value.toFixed(2)) + " 평점";
   };
   const getDateDiffer = useCallback(() => {
-    const strArr = info.date.split("-");
-    const dateArr = strArr[2].split(" ");
-    const timeArr = dateArr[1].split(":");
-    const matchYear = Number(strArr[0]);
-    const matchMonth = Number(strArr[1]);
-    const matchDate = Number(dateArr[0]);
-    const matchHours = Number(timeArr[0]);
-    const matchMinute = Number(timeArr[1]);
-    const today = new Date();
-    const todayYear: number = today.getFullYear();
-    const todayMonth: number = today.getMonth() + 1;
-    const todayDate: number = today.getDate();
-    const todayHours: number = today.getHours();
-    const todayMinute: number = today.getMinutes();
-    if (todayYear > matchYear) {
-      return `${todayYear - matchYear}년 전`;
+    if (info) {
+      const strArr = info.date.split("-");
+      const dateArr = strArr[2].split(" ");
+      const timeArr = dateArr[1].split(":");
+      const matchYear = Number(strArr[0]);
+      const matchMonth = Number(strArr[1]);
+      const matchDate = Number(dateArr[0]);
+      const matchHours = Number(timeArr[0]);
+      const matchMinute = Number(timeArr[1]);
+      const today = new Date();
+      const todayYear: number = today.getFullYear();
+      const todayMonth: number = today.getMonth() + 1;
+      const todayDate: number = today.getDate();
+      const todayHours: number = today.getHours();
+      const todayMinute: number = today.getMinutes();
+      if (todayYear > matchYear) {
+        return `${todayYear - matchYear}년 전`;
+      }
+      if (todayMonth > matchMonth) {
+        return `${todayMonth - matchMonth}개월 전`;
+      }
+      if (todayDate > matchDate) {
+        return `${todayDate - matchDate}일 전`;
+      }
+      if (todayHours > matchHours) {
+        return `${todayHours - matchHours}시간 전`;
+      }
+      if (todayMinute > matchMinute) {
+        return `${todayMinute - matchMinute}분 전`;
+      }
     }
-    if (todayMonth > matchMonth) {
-      return `${todayMonth - matchMonth}개월 전`;
-    }
-    if (todayDate > matchDate) {
-      return `${todayDate - matchDate}일 전`;
-    }
-    if (todayHours > matchHours) {
-      return `${todayHours - matchHours}시간 전`;
-    }
-    if (todayMinute > matchMinute) {
-      return `${todayMinute - matchMinute}분 전`;
-    }
-  }, [info.date]);
-  if (info.playInfo) {
-    return (
-      <div style={{ marginBottom: "10px" }}>
-        <PlayedInfoWrapper win={info.playInfo.result === "win"}>
-          <div
-            style={{
-              position: "relative",
-              zIndex: 2,
-              width: "75px",
-              textAlign: "center",
-              fontSize: "12px",
-            }}
-          >
+  }, [info && info.date]);
+
+  return (
+    <div style={{ marginBottom: "10px" }}>
+      <PlayedInfoWrapper win={info ? info.playInfo.result === "win" : true}>
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            width: "75px",
+            textAlign: "center",
+            fontSize: "12px",
+          }}
+        >
+          {info ? (
             <Popover content={info.date}>
-              <InfoCircleOutlined />
-              <span>&nbsp;{getDateDiffer()}</span>
+              <MatchDateSpan>
+                <InfoCircleOutlined />
+              </MatchDateSpan>
+              <MatchDateSpan>&nbsp;{getDateDiffer()}</MatchDateSpan>
             </Popover>
-          </div>
+          ) : (
+            <>
+              <MatchDateSpan>
+                <InfoCircleOutlined />
+              </MatchDateSpan>
+              <MatchDateSpan>
+                <Skeleton.Input
+                  style={{
+                    width: "37px",
+                    height: "16px",
+                    marginLeft: "10px",
+                  }}
+                  active
+                  size="small"
+                />
+              </MatchDateSpan>
+            </>
+          )}
+        </div>
+        <div
+          style={{
+            height: "101px",
+            position: "absolute",
+            zIndex: 1,
+          }}
+        >
+          <BackgroundWinSpan>
+            {info ? info.playInfo.result.toUpperCase() : "WIN"}
+          </BackgroundWinSpan>
+        </div>
+        <div style={{ position: "relative", zIndex: 2 }}>
           <div
             style={{
-              height: "101px",
-              position: "absolute",
-              zIndex: 1,
+              borderRadius: "50% 50%",
+              overflow: "hidden",
+              margin: "10px",
             }}
           >
-            <span
-              style={{
-                fontWeight: "bolder",
-                fontSize: "155px",
-                lineHeight: "0.5",
-                color: "#ffffff",
-                opacity: "0.5",
-                display: "block",
-                overflowY: "hidden",
-                overflowX: "visible",
-                height: "101px",
-              }}
-            >
-              {info.playInfo.result.toUpperCase()}
-            </span>
-          </div>
-          <div style={{ position: "relative", zIndex: 2 }}>
-            <div
-              style={{
-                borderRadius: "50% 50%",
-                overflow: "hidden",
-                margin: "10px",
-              }}
-            >
-              <img
+            {info ? (
+              <CharacterImage
                 src={`https://img-api.neople.co.kr/cy/characters/${info.playInfo.characterId}`}
                 alt="캐릭터"
               />
-            </div>
-            <div style={{ width: "100%", textAlign: "center" }}>
-              <span style={{ fontSize: "14px", fontWeight: "bold" }}>
-                {info.playInfo.characterName}
-              </span>
-            </div>
+            ) : (
+              <Skeleton.Avatar
+                active
+                shape="circle"
+                style={{ width: "40px", height: "40px" }}
+              />
+            )}
           </div>
-          <div
-            style={{
-              overflow: "hidden",
-              margin: "10px",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            <img
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <CharacterCharSpan>
+              {info ? (
+                info.playInfo.characterName
+              ) : (
+                <Skeleton.Input
+                  style={{
+                    width: "40px",
+                    height: "16px",
+                    marginLeft: "10px",
+                  }}
+                  active
+                  size="small"
+                />
+              )}
+            </CharacterCharSpan>
+          </div>
+        </div>
+        <PositionImageWrapper>
+          {info ? (
+            <PositionImage
               src={
                 info.position.name === "탱커"
                   ? tanker
@@ -195,60 +226,104 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                   : "에러"
               }
               alt="포지션"
-              width="25"
             />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "80px",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            <div style={{ textAlign: "center" }}>
-              <span style={{ fontSize: "12px", color: "#6f6f6f" }}>
-                K / D / A
-              </span>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.killCount}
-              </span>{" "}
-              /{" "}
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.deathCount}
-              </span>{" "}
-              /{" "}
-              <span style={{ fontWeight: "bold" }}>
-                {info.playInfo.assistCount}
-              </span>
-            </div>
-            <div style={{ textAlign: "center" }}>{kda()}</div>
-          </div>
-          <div
-            style={{
-              width: "80px",
-              position: "relative",
-              zIndex: 2,
-              textAlign: "center",
-            }}
-          >
-            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>공격량</span>
-            <br />
-            <span style={{ color: "#00860a", fontWeight: "bold" }}>
-              {info.playInfo.attackPoint}
-            </span>
-            <br />
-            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>피해량</span>
-            <br />
-            <span style={{ color: "#690000", fontWeight: "bold" }}>
-              {info.playInfo.damagePoint}
+          ) : (
+            <Skeleton.Avatar
+              active
+              shape="circle"
+              style={{ width: "25px", height: "25px" }}
+            />
+          )}
+        </PositionImageWrapper>
+        <KdaPresenterWrapper>
+          <div style={{ textAlign: "center" }}>
+            <span style={{ fontSize: "12px", color: "#6f6f6f" }}>
+              <KdaSpan>K / D / A</KdaSpan>
             </span>
           </div>
-          <div style={{ margin: "10px", position: "relative", zIndex: 3 }}>
-            {info.position.attribute.map(
+          <div style={{ textAlign: "center" }}>
+            <KdaSpan>
+              {info ? (
+                <>
+                  <span style={{ fontWeight: "bold" }}>
+                    {info.playInfo.killCount}
+                  </span>
+                  &nbsp;/&nbsp;
+                  <span style={{ fontWeight: "bold" }}>
+                    {info.playInfo.deathCount}
+                  </span>
+                  &nbsp;/&nbsp;
+                  <span style={{ fontWeight: "bold" }}>
+                    {info.playInfo.assistCount}
+                  </span>
+                </>
+              ) : (
+                <Skeleton.Input
+                  style={{
+                    width: "57px",
+                    height: "18px",
+                  }}
+                  active
+                  size="small"
+                />
+              )}
+            </KdaSpan>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <KdaSpan>
+              {info ? (
+                kda()
+              ) : (
+                <Skeleton.Input
+                  style={{
+                    width: "57px",
+                    height: "18px",
+                  }}
+                  active
+                  size="small"
+                />
+              )}
+            </KdaSpan>
+          </div>
+        </KdaPresenterWrapper>
+        <PointPresenterWrapper>
+          <span style={{ fontSize: "12px", color: "#6f6f6f" }}>공격량</span>
+          <br />
+          <span style={{ color: "#00860a", fontWeight: "bold" }}>
+            {info ? (
+              info.playInfo.attackPoint
+            ) : (
+              <Skeleton.Input
+                style={{
+                  width: "40px",
+                  height: "18px",
+                }}
+                active
+                size="small"
+              />
+            )}
+          </span>
+          <br />
+          <span style={{ fontSize: "12px", color: "#6f6f6f" }}>피해량</span>
+          <br />
+          <span style={{ color: "#690000", fontWeight: "bold" }}>
+            {info ? (
+              info.playInfo.damagePoint
+            ) : (
+              <Skeleton.Input
+                style={{
+                  width: "40px",
+                  height: "18px",
+                }}
+                active
+                size="small"
+              />
+            )}
+          </span>
+        </PointPresenterWrapper>
+        <div style={{ margin: "10px", position: "relative", zIndex: 3 }}>
+          {info ? (
+            info.position.attribute.map(
               (
                 data: {
                   level: number;
@@ -274,21 +349,60 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
                         borderRadius: "25% 25%",
                       }}
                     />
-                    <span style={{ fontSize: "12px" }}>&nbsp;{data.name}</span>
+                    <CharacteristicSpan>&nbsp;{data.name}</CharacteristicSpan>
                   </div>
                 </div>
               )
-            )}
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              marginLeft: "auto",
-              right: "0",
-            }}
-          >
-            <img
+            )
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
+              <div>
+                <Skeleton.Input
+                  style={{
+                    width: "60px",
+                    height: "18px",
+                  }}
+                  active
+                  size="small"
+                />
+                <br />
+                <Skeleton.Input
+                  style={{
+                    width: "60px",
+                    height: "18px",
+                  }}
+                  active
+                  size="small"
+                />
+                <br />
+                <Skeleton.Input
+                  style={{
+                    width: "60px",
+                    height: "18px",
+                  }}
+                  active
+                  size="small"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            marginLeft: "auto",
+            right: "0",
+          }}
+        >
+          {info ? (
+            <MapImage
               src={
                 info.map.mapId === "101"
                   ? map_riverford
@@ -307,53 +421,54 @@ function PlayedInfoSec(data: { data: GameData }): JSX.Element {
               alt="맵"
               height="101"
             />
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                top: "0",
-                left: "0",
-                background: `linear-gradient(60deg, ${
-                  info.playInfo.result === "win"
+          ) : (
+            <MapImage src={map_riverford} alt="맵" height="101" />
+          )}
+
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: "0",
+              left: "0",
+              background: `linear-gradient(60deg, ${
+                info
+                  ? info.playInfo.result === "win"
                     ? "rgba(186, 231, 255, 1)"
                     : "rgba(255, 204, 199, 1)"
-                }30%, rgba(255,255,255,0))`,
-              }}
-            >
-              <div
+                  : "rgba(186, 231, 255, 1)"
+              }30%, rgba(255,255,255,0))`,
+            }}
+          >
+            <MapPresenterWrapper>
+              <span
                 style={{
-                  position: "absolute",
-                  top: "50px",
-                  right: "0",
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                  width: "100px",
-                  height: "30px",
-                  textAlign: "center",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  color: "#ffffff",
+                  lineHeight: "30px",
                 }}
               >
-                <span
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "bold",
-                    color: "#ffffff",
-                    lineHeight: "30px",
-                  }}
-                >
-                  {info.map.name === "그랑플람 아시아 지부"
+                {info
+                  ? info.map.name === "그랑플람 아시아 지부"
                     ? "그랑플람"
-                    : info.map.name}
-                </span>
-              </div>
-            </div>
+                    : info.map.name
+                  : ""}
+              </span>
+            </MapPresenterWrapper>
           </div>
-        </PlayedInfoWrapper>
-        <PlayedInfoDefail matchId={info.matchId} />
-      </div>
-    );
-  } else {
-    return <div>정보를 받아오는 중입니다.</div>;
-  }
+        </div>
+      </PlayedInfoWrapper>
+      {info ? (
+        <PlayedInfoDefail matchId={info.matchId} loading={loading} />
+      ) : (
+        <PlayedInfoDetailBtn win={true}>
+          <LoadingOutlined style={{ margin: "0 auto" }} />
+        </PlayedInfoDetailBtn>
+      )}
+    </div>
+  );
 }
 
 export default PlayedInfoSec;
@@ -364,4 +479,129 @@ const PlayedInfoWrapper = styled.div<{ win: boolean }>`
   display: flex;
   align-items: center;
   position: relative;
+  height: 101px;
+`;
+
+const PointPresenterWrapper = styled.div`
+  width: 80px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const MapPresenterWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const MapImage = styled.img`
+  height: 101px;
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const CharacteristicSpan = styled.span`
+  font-size: 12px;
+  @media (max-width: 710px) {
+    display: none;
+  }
+`;
+
+const BackgroundWinSpan = styled.span`
+  font-weight: bolder;
+  font-size: 155px;
+  line-height: 0.5;
+  color: #ffffff;
+  opacity: 0.5;
+  display: block;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 101px;
+  @media (min-width: 530px) and (max-width: 600px) {
+    font-size: 130px;
+  }
+  @media (min-width: 460px) and (max-width: 529px) {
+    font-size: 110px;
+  }
+  @media (max-width: 459px) {
+    font-size: 100px;
+  }
+`;
+
+const MatchDateSpan = styled.span`
+  @media (min-width: 410px) and (max-width: 480px) {
+    font-size: 10px;
+  }
+  @media (max-width: 410px) {
+    font-size: 8px;
+  }
+`;
+
+const CharacterImage = styled.img`
+  @media (min-width: 410px) and (max-width: 480px) {
+    width: 36px;
+  }
+  @media (max-width: 410px) {
+    width: 26px;
+  }
+`;
+
+const CharacterCharSpan = styled.span`
+  font-size: 14px;
+  font-weight: bold;
+  @media (min-width: 410px) and (max-width: 480px) {
+    font-size: 10px;
+  }
+  @media (max-width: 410px) {
+    font-size: 8px;
+  }
+`;
+
+const PositionImageWrapper = styled.div`
+  overflow: hidden;
+  margin: 10px;
+  position: relative;
+  z-index: 2;
+  @media (max-width: 480px) {
+    margin: 2px;
+  }
+`;
+
+const PositionImage = styled.img`
+  width: 25px;
+  @media (min-width: 410px) and (max-width: 480px) {
+    width: 20px;
+  }
+  @media (max-width: 480px) {
+    width: 15px;
+  }
+`;
+
+const KdaPresenterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  position: relative;
+  z-index: 2;
+  @media (max-width: 480px) {
+    width: 65px;
+  }
+`;
+
+const KdaSpan = styled.span`
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `;

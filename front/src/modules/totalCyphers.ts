@@ -26,6 +26,9 @@ export const searchUserByNickname = (nickname: string) => ({
     nickname,
   },
 });
+export const searchedPlayersReset = {
+  type: "SEARCHED_PLAYERS_RESET",
+};
 export const getUserByUserId = (userId: string) => ({
   type: GET_USER_INFO_REQUEST,
   payload: {
@@ -72,8 +75,11 @@ type TotalCyphersAction =
 // 기본값 타입
 export type totalCypherState = {
   searchedPlayers: Array<any>;
+  searchingUser: boolean;
   searchUserErrorReason: string;
   focusedUser: any;
+  focusingUser: boolean;
+  gettingUserPlaylist: boolean;
   playedRecords: Array<any>;
   getUserPlaylistFailReason: string;
   getUserInfoFailReason: string;
@@ -85,8 +91,11 @@ export type totalCypherState = {
 // 기본값
 export const initialState: totalCypherState = {
   searchedPlayers: [],
+  searchingUser: false,
   searchUserErrorReason: "",
   focusedUser: "",
+  focusingUser: false,
+  gettingUserPlaylist: false,
   playedRecords: [],
   getUserPlaylistFailReason: "",
   getUserInfoFailReason: "",
@@ -105,28 +114,51 @@ export default function totalCyphersReducer(
         currentUrl: action.payload.url,
       };
     }
+    case SEARCH_USER_NICKNAME_REQUEST: {
+      return {
+        ...state,
+        searchingUser: true,
+        searchedPlayers: [],
+      };
+    }
     case SEARCH_USER_NICKNAME_SUCCESS: {
       return {
         ...state,
+        searchingUser: false,
         searchedPlayers: action.payload.searchedPlayers,
       };
     }
     case SEARCH_USER_NICKNAME_FAILURE: {
       return {
         ...state,
+        searchingUser: false,
         searchedPlayers: action.payload,
+      };
+    }
+    case "SEARCHED_PLAYERS_RESET": {
+      return {
+        ...state,
+        searchedPlayers: [],
+      };
+    }
+    case GET_USER_INFO_REQUEST: {
+      return {
+        ...state,
+        focusingUser: true,
       };
     }
     case GET_USER_INFO_SUCCESS: {
       return {
         ...state,
         focusedUser: action.payload.focusedUser,
+        focusingUser: false,
       };
     }
     case GET_USER_INFO_FAILURE: {
       return {
         ...state,
         getUserInfoFailReason: action.payload.getUserInfoErrorReason,
+        focusingUser: false,
       };
     }
     case RESET_SEARCHED_USER_LIST: {
@@ -135,16 +167,24 @@ export default function totalCyphersReducer(
         searchedPlayers: [],
       };
     }
+    case GET_USER_PLAYLIST_REQUEST: {
+      return {
+        ...state,
+        gettingUserPlaylist: true,
+      };
+    }
     case GET_USER_PLAYLIST_SUCCESS: {
       return {
         ...state,
         playedRecords: action.payload.playedRecords,
+        gettingUserPlaylist: false,
       };
     }
     case GET_USER_PLAYLIST_FAILURE: {
       return {
         ...state,
         getUserPlaylistFailReason: action.payload.getUserPlaylistFailReason,
+        gettingUserPlaylist: false,
       };
     }
     case GET_GAME_DETAIL_SUCCESS: {
@@ -155,6 +195,11 @@ export default function totalCyphersReducer(
             ? { ...data, matchDetail: action.payload.playedRecords }
             : data
         ),
+      };
+    }
+    case GET_GAME_DETAIL_FAILURE: {
+      return {
+        ...state,
       };
     }
     default:

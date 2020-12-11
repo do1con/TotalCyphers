@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { Avatar, Card, Statistic } from "antd";
+import { Avatar, Card, Statistic, Skeleton } from "antd";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules/index";
@@ -15,8 +15,8 @@ type WinRecords = {
 function UserInfoSec(parameter: { parameter: string }): JSX.Element {
   const userId = parameter.parameter;
   const dispatch = useDispatch();
-  const userInfo = useSelector(
-    (state: RootState) => state.totalCyphers.focusedUser
+  const { focusedUser, focusingUser } = useSelector(
+    (state: RootState) => state.totalCyphers
   );
   useEffect(() => {
     dispatch(getUserByUserId(userId));
@@ -24,9 +24,6 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
   useEffect(() => {
     dispatch(getUserByUserId(userId));
   }, [parameter]);
-  useEffect(() => {
-    console.log("유저인포", userInfo);
-  });
   const checkNormalGameRecordsExist = useCallback(
     (recordsData: Array<WinRecords>) => {
       const result = recordsData.find((datas: WinRecords) => {
@@ -51,59 +48,93 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
     },
     []
   );
-  if (userInfo) {
-    return (
+  return (
+    <UserInfoWrapper>
       <Card
-        style={{ width: "27%" }}
         title={
           <FlexBox style={{ justifyContent: "center", alignItems: "center" }}>
-            <Avatar size="large">{userInfo && userInfo.grade}급</Avatar>
-            <span
-              style={{
-                paddingLeft: "10px",
-                fontSize: "16px",
-                fontWeight: "lighter",
-              }}
-            >
-              {userInfo && userInfo.nickname}
-            </span>
+            {focusingUser ? (
+              <Skeleton.Avatar
+                active
+                shape="circle"
+                style={{ width: "40px", height: "40px" }}
+              />
+            ) : (
+              <Avatar size="large">{focusedUser && focusedUser.grade}급</Avatar>
+            )}
+            {focusingUser ? (
+              <Skeleton.Input
+                style={{ width: "50px", height: "24px", marginLeft: "10px" }}
+                active
+                size="small"
+              />
+            ) : (
+              <span
+                style={{
+                  paddingLeft: "10px",
+                  fontSize: "16px",
+                  fontWeight: "lighter",
+                }}
+              >
+                {focusedUser && focusedUser.nickname}
+              </span>
+            )}
           </FlexBox>
         }
       >
-        <FlexBox>
-          <Statistic
-            title="클랜"
-            value={userInfo.clanName ? userInfo.clanName : "없음"}
-            valueStyle={{ fontSize: "14px", fontWeight: "bold" }}
-          />
-        </FlexBox>
-        <FlexBox>
-          <Statistic
-            title="등급"
-            value={userInfo.tierName ? userInfo.tierName : "없음"}
-            valueStyle={{ fontSize: "14px", fontWeight: "bold" }}
-          />
-        </FlexBox>
-        <FlexBox>
-          <Statistic
-            title="최고RP"
-            value={
-              userInfo.maxRatingPoint
-                ? userInfo.maxRatingPoint
-                : "최근 공식전을 플레이하지 않았습니다."
-            }
-            valueStyle={{ fontSize: "14px", fontWeight: "bold" }}
-          />
-        </FlexBox>
+        <div>
+          <ItemTitle>클랜</ItemTitle>
+          {focusingUser ? (
+            <Skeleton.Input
+              style={{ width: "30px", height: "22px" }}
+              active
+              size="small"
+            />
+          ) : (
+            <ItemContent>
+              {focusedUser.clanName ? focusedUser.clanName : "없음"}
+            </ItemContent>
+          )}
+        </div>
+        <div>
+          <ItemTitle>등급</ItemTitle>
+          {focusingUser ? (
+            <Skeleton.Input
+              style={{ width: "50px", height: "22px" }}
+              active
+              size="small"
+            />
+          ) : (
+            <ItemContent>
+              {focusedUser.tierName ? focusedUser.tierName : "없음"}
+            </ItemContent>
+          )}
+        </div>
+        <div style={{ height: "73px" }}>
+          <ItemTitle>최고 RP</ItemTitle>
+          {focusingUser ? (
+            <Skeleton.Input
+              style={{ width: "120px", height: "22px" }}
+              active
+              size="small"
+            />
+          ) : (
+            <ItemContent>
+              {focusedUser.maxRatingPoint
+                ? focusedUser.maxRatingPoint
+                : "최근 공식전을 플레이하지 않았습니다."}
+            </ItemContent>
+          )}
+        </div>
         <br />
-        {userInfo.records && (
+        {focusedUser.records && (
           <div>
             <FlexBox>
               <Statistic title="최근 전적" valueStyle={{ display: "none" }} />
             </FlexBox>
             <Statistic title="공식전" valueStyle={{ display: "none" }} />
-            {checkRatingGameRecordsExist(userInfo.records)
-              ? userInfo.records.map(
+            {checkRatingGameRecordsExist(focusedUser.records)
+              ? focusedUser.records.map(
                   (recordsData: WinRecords, index: number) => {
                     if (recordsData.gameTypeId === "rating") {
                       return (
@@ -114,30 +145,48 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
                               width: "50%",
                             }}
                           >
-                            <Statistic
-                              title="승"
-                              value={recordsData.winCount}
-                              valueStyle={{
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            />
-                            <Statistic
-                              title="패"
-                              value={recordsData.loseCount}
-                              valueStyle={{
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            />
-                            <Statistic
-                              title="중단"
-                              value={recordsData.stopCount}
-                              valueStyle={{
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            />
+                            <div>
+                              <ItemTitle>승</ItemTitle>
+                              {focusingUser ? (
+                                <Skeleton.Input
+                                  style={{ width: "20px", height: "22px" }}
+                                  active
+                                  size="small"
+                                />
+                              ) : (
+                                <ItemContent style={{ fontSize: "12px" }}>
+                                  {recordsData.winCount}
+                                </ItemContent>
+                              )}
+                            </div>
+                            <div>
+                              <ItemTitle>패</ItemTitle>
+                              {focusingUser ? (
+                                <Skeleton.Input
+                                  style={{ width: "20px", height: "22px" }}
+                                  active
+                                  size="small"
+                                />
+                              ) : (
+                                <ItemContent style={{ fontSize: "12px" }}>
+                                  {recordsData.loseCount}
+                                </ItemContent>
+                              )}
+                            </div>
+                            <div>
+                              <ItemTitle>중단</ItemTitle>
+                              {focusingUser ? (
+                                <Skeleton.Input
+                                  style={{ width: "20px", height: "22px" }}
+                                  active
+                                  size="small"
+                                />
+                              ) : (
+                                <ItemContent style={{ fontSize: "12px" }}>
+                                  {recordsData.stopCount}
+                                </ItemContent>
+                              )}
+                            </div>
                           </FlexBox>
                         </div>
                       );
@@ -146,10 +195,10 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
                 )
               : "최근 공식전 전적이 없습니다."}
             <Statistic title="일반전" valueStyle={{ display: "none" }} />
-            {checkNormalGameRecordsExist(userInfo.records)
-              ? userInfo.records.map((checkData: WinRecords) => {
+            {checkNormalGameRecordsExist(focusedUser.records)
+              ? focusedUser.records.map((checkData: WinRecords) => {
                   if (checkData.gameTypeId === "normal") {
-                    return userInfo.records.map(
+                    return focusedUser.records.map(
                       (recordsData: WinRecords, index: number) => {
                         if (recordsData.gameTypeId === "normal") {
                           return (
@@ -160,30 +209,48 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
                                   width: "50%",
                                 }}
                               >
-                                <Statistic
-                                  title="승"
-                                  value={recordsData.winCount}
-                                  valueStyle={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                  }}
-                                />
-                                <Statistic
-                                  title="패"
-                                  value={recordsData.loseCount}
-                                  valueStyle={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                  }}
-                                />
-                                <Statistic
-                                  title="중단"
-                                  value={recordsData.stopCount}
-                                  valueStyle={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                  }}
-                                />
+                                <div>
+                                  <ItemTitle>승</ItemTitle>
+                                  {focusingUser ? (
+                                    <Skeleton.Input
+                                      style={{ width: "20px", height: "22px" }}
+                                      active
+                                      size="small"
+                                    />
+                                  ) : (
+                                    <ItemContent style={{ fontSize: "12px" }}>
+                                      {recordsData.winCount}
+                                    </ItemContent>
+                                  )}
+                                </div>
+                                <div>
+                                  <ItemTitle>패</ItemTitle>
+                                  {focusingUser ? (
+                                    <Skeleton.Input
+                                      style={{ width: "20px", height: "22px" }}
+                                      active
+                                      size="small"
+                                    />
+                                  ) : (
+                                    <ItemContent style={{ fontSize: "12px" }}>
+                                      {recordsData.loseCount}
+                                    </ItemContent>
+                                  )}
+                                </div>
+                                <div>
+                                  <ItemTitle>중단</ItemTitle>
+                                  {focusingUser ? (
+                                    <Skeleton.Input
+                                      style={{ width: "20px", height: "22px" }}
+                                      active
+                                      size="small"
+                                    />
+                                  ) : (
+                                    <ItemContent style={{ fontSize: "12px" }}>
+                                      {recordsData.stopCount}
+                                    </ItemContent>
+                                  )}
+                                </div>
                               </FlexBox>
                             </div>
                           );
@@ -196,10 +263,8 @@ function UserInfoSec(parameter: { parameter: string }): JSX.Element {
           </div>
         )}
       </Card>
-    );
-  } else {
-    return <div>로딩 중...</div>;
-  }
+    </UserInfoWrapper>
+  );
 }
 
 export default UserInfoSec;
@@ -207,4 +272,23 @@ export default UserInfoSec;
 const FlexBox = styled.div`
   display: flex;
   padding-bottom: 10px;
+`;
+
+const ItemTitle = styled.h3`
+  font-size: 14px;
+  color: #808080;
+`;
+
+const ItemContent = styled.span`
+  font-size: 14px;
+  color: #353535;
+  font-weight: bold;
+`;
+
+const UserInfoWrapper = styled.div`
+  width: 27%;
+  @media (max-width: 767px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 `;
